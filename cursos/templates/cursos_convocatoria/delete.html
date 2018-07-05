@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+	</div>
+	<div class="row bg-white">
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Tipo</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{curso_convocatoria.tipo.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Nombre</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{curso_convocatoria.nombre.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Indispensable</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{% if curso_convocatoria.indispensable %} SI {% else %} NO {% endif %}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Descripción</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{curso_convocatoria.descripcion}}</span></div>
+		</div>
+	</div>
+	<div class="row bg-white">
+		<form method="POST" class="form-horizontal" action="" >
+			{% csrf_token %}
+			<div class="row text-center">
+				<div class="col-sm-12">
+					<h5 class="text-uppercase" ><strong>deseas eliminar el registro ?</strong></h5>
+				</div>
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-round btn-success" >si</button>
+					<a href="/cursos/puesto/{{convocatoria_puesto.uuid}}/add/" class="btn btn-round btn-danger" >no</a>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

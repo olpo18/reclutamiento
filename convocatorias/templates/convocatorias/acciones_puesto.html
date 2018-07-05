@@ -1,0 +1,59 @@
+<div class="dropdown">
+	<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+		acciones
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/postulantes/">
+				<span><i class="zmdi zmdi-plus-circle"></i></span> Agregar Postulantes
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/personas/">
+				<i class="zmdi zmdi-accounts"></i> Personas
+			</a>
+		</li>
+		<li role="separator" class="divider"></li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/preseleccion/">
+				<span><i class="zmdi zmdi-check"></i></span> Pre Selección Automática
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/preseleccion_manual/">
+				<span><i class="zmdi zmdi-check"></i></span> Pre Selección Manual
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/contactabilidad/">
+				<span><i class="zmdi zmdi-phone"></i></span> Contactabilidad de preseleccion
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/verificacion/">
+				<span><i class="zmdi zmdi-phone"></i></span> Verificacion domiciliaria
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/sesion_preseleccion/">
+				<span><i class="zmdi zmdi-assignment"></i></span> Sesión de comite
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/aprobados/">
+				<span><i class="zmdi zmdi-check-circle"></i></span> Aprobados
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/tramite_documentario/">
+				<span><i class="zmdi zmdi-card"></i></span> Tramite Documentario
+			</a>
+		</li>
+		<li>
+			<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/pases_ingreso/">
+				<span><i class="zmdi zmdi-badge-check"></i></span> Pases de ingreso
+			</a>
+		</li>
+	</ul>
+</div>

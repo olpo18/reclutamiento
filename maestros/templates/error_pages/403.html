@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<title>Prohibido</title>
+		<link rel="stylesheet" href="{% static 'assets/css/vendor.bundle.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/app.bundle.css' %}">
+		<link rel="stylesheet" href="{% static 'assets/css/theme-a.css' %}">
+	</head>
+	<body id="error_page">
+		<div id="error_wrapper" class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<header>
+						<h1>403</h1>
+						<h2><span>PROHIBIDO!</span><br/>
+							No tienes permisos, contacta al administrador.
+						</h2>
+					</header>
+					<!-- <a href="index.html" class="btn btn-primary btn-round">Let's go home</a>-->
+				</div>
+			</div>
+		</div>
+		<script src="{% static 'assets/js/vendor.bundle.js' %}"></script>
+		<script src="{% static 'assets/js/app.bundle.js' %}"></script>
+	</body>
+</html>

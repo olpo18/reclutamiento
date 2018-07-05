@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<form action="" method="GET" class="form-horizontal" >
+			<div class="form-group is-empty m-t-5">
+				<label for="search" class="col-sm-2 control-label">Buscar</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="search" name="search" placeholder="Buscar por numero de documento, nombres o apellidos">
+				</div>
+				<div class="col-sm-4">
+					<button type="submit" class="btn btn-info btn-round m-t-0">buscar</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="row">
+		{% if personas %}
+			<div class="panel-group expansion" id="popout" role="tablist" aria-multiselectable="true">
+				{% for persona in personas %}
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading{{persona.uuid}}">
+							<h4 class="panel-title">
+								<a {% if not forloop.first %} class="collapsed" {% endif %} role="button" data-toggle="collapse" data-parent="#popout" href="#popout{{persona.uuid}}" aria-expanded="true" aria-controls="popout{{persona.uuid}}">{{persona.nombres}} {{persona.apellidos}}</a>
+							</h4>
+						</div>
+						<div id="popout{{persona.uuid}}" class="panel-collapse collapse {% if forloop.first %} in {% endif %}" role="tabpanel" aria-labelledby="popout{{persona.uuid}}">
+							<div class="panel-body">
+								{% include "personas/informacion_persona.html" with persona=persona %}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<h1>No hay registros de personas.</h1>
+		{% endif %}
+	</div>
+{% endblock %}
+

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+				<form action="" method="GET" class="form-horizontal" >
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">DNI:</label></div>
+								<div class="col-sm-12">
+									<input type="text" name="dni" class="form-control" value="{{dni|default:''}}" >
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Tipo</label></div>
+								<div class="col-sm-12">
+									<select name="tipo" class="normal__select">
+										<option value="">seleccionar</option>
+										{% for tipo in tipo_atenciones %}
+											<option value="{{tipo.uuid}}" {% if tipo.uuid == tipo_selected.uuid %} selected {% endif %} >{{tipo.descripcion}}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Inicio</label></div>
+								<div class="col-sm-12">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										<input type="text" class="form-control datepicker" name="fecha_inicio" id="fecha_inicio" type="date" value="{{inicio|default:''}}" autocomplete="off" >
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Fin</label></div>
+								<div class="col-sm-12">
+									<div class="input-group">
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										<input type="text" class="form-control datepicker" name="fecha_fin" id="fecha_fin" type="date" value="{{fin|default:''}}" autocomplete="off" >
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<div class="col-sm-12"><label class="control-label"></label></div>
+								<div class="col-sm-12">
+									<button type="submit" class="btn btn-info btn-round m-t-0">buscar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			{% include "messages.html" %}
+			<div class="row">
+				{% if atenciones %}
+					<div class="col-sm-12">
+						<form action="" method="POST">
+							{% csrf_token %}
+							<button type="submit" class="btn btn-warning btn-round" >exportar a pdf</button>
+						</form>
+					</div>
+					<div class="col-sm-12">
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>DNI</th>
+										<th>Persona</th>
+										<th>Tipo</th>
+										<th>Fecha</th>
+										<th>Observaciones</th>
+										<th>hora inicio</th>
+										<th>hora fin</th>
+										<th>Finalizada</th>
+										<th>Opción</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for atencion in atenciones %}
+										<tr>
+											<th scope="row">{{forloop.counter}}</th>
+											<td>{{atencion.persona.numero_documento}}</td>
+											<td>{{atencion.persona.nombres}} {{atencion.persona.apellidos}}</td>
+											<td>
+												{{atencion.tipo.descripcion}}
+												{% if atencion.capacitacion %}
+													<br><strong>Nombre: </strong> {{atencion.capacitacion.descripcion}}
+												{% endif %}
+											</td>
+											<td>{{atencion.fecha|date:'d'}} de {{atencion.fecha|date:'F Y'}} </td>
+											<td>{{atencion.observaciones|default:''}}</td>
+											<td>{{atencion.hora_inicio|date:'g:i a'}}</td>
+											<td>{{atencion.hora_fin|date:'g:i a'|default:''}}</td>
+											<td class="text-center" >
+												{% if atencion.finalizada %}
+													<span class="text-green" ><i class="zmdi zmdi-check-circle"></i></span>
+												{% else %}
+													<a href="/atenciones/{{atencion.uuid}}/finalizar/" class="btn btn-warning btn-xs btn-round m-0" >
+														<span data-toggle="tooltip" data-placement="top" title="finalizar" ><i class="zmdi zmdi-assignment-check"></i></span>
+													</a>
+												{% endif %}
+											</td>
+											<td>
+												<a href="/atenciones/{{atencion.uuid}}/edit/" class="btn btn-success btn-xs btn-round m-0" >
+													<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+												</a>
+												<a href="/atenciones/{{atencion.uuid}}/delete/" class="btn btn-danger btn-xs btn-round m-0" >
+													<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+												</a>
+											</td>
+										</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				{% else %}
+					<h1>No hay registros de atenciones.</h1>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

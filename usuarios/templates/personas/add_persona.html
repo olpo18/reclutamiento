@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					{% if messages %}
+						{% for message in messages %}
+							<div class="alert alert-{{message.tags}}" role="alert">
+								{{message}}
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+				<form id="form-add-persona" method="POST" class="form-horizontal" enctype="multipart/form-data" >
+					{% csrf_token %}
+					{% if convocatoria_puesto %}
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group is-empty">
+									<label>
+										<input type="checkbox" name="checkbox_postular_convocatoria_puesto" checked="checked" > Postular al puesto de {{convocatoria_puesto.rango.descripcion|upper}} {{convocatoria_puesto.especialidad.descripcion|upper}}
+									</label>
+								</div>
+							</div>	
+						</div>
+					{% endif %}
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group is-empty">
+								<div class="col-sm-2"><label for="{{form.verificado.id_for_label}}" class="control-label">{{form.verificado.label}}</label></div>
+								<div class="col-sm-10">
+									{{form.verificado}}
+									<span class="text-red" >{{form.verificado.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.nombres.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.nombres}}
+									<span class="text-red" >{{form.nombres.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.apellidos.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.apellidos}}
+									<span class="text-red" >{{form.apellidos.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.genero.label}}</label></div>
+								<div class="col-sm-12">
+									{% for genero in form.genero %}
+										<label class="checkbox-inline">
+											{{genero}}
+										</label>
+									{% endfor %}
+									<span class="text-red" >{{form.genero.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">(*) {{form.tipo_documento.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.tipo_documento}}
+									<span class="text-red" >{{form.tipo_documento.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.numero_documento.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.numero_documento}}
+									<span class="text-red" >{{form.numero_documento.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.email.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.email}}
+									<span class="text-red" >{{form.email.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">(*) Lugar de nacimiento</label></div>
+								<div class="col-sm-12">
+									{{form.departamento_nacimiento}}
+									<span class="text-red" >{{form.departamento_nacimiento.errors}}</span>
+								</div>
+								<div class="col-sm-12">
+									{{form.provincia_nacimiento}}
+									<span class="text-red" >{{form.provincia_nacimiento.errors}}</span>
+								</div>
+								<div class="col-sm-12">
+									{{form.distrito_nacimiento}}
+									<span class="text-red" >{{form.distrito_nacimiento.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Lugar de residencia</label></div>
+								<div class="col-sm-12">
+									{{form.departamento_residencia}}
+									<span class="text-red" >{{form.departamento_residencia.errors}}</span>
+								</div>
+								<div class="col-sm-12">
+									{{form.provincia_residencia}}
+									<span class="text-red" >{{form.provincia_residencia.errors}}</span>
+								</div>
+								<div class="col-sm-12">
+									{{form.distrito_residencia}}
+									<span class="text-red" >{{form.distrito_residencia.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.tiempo_residencia.label}}</label></div>
+								<div class="col-sm-6">
+									{{form.tiempo_residencia}}
+								</div>
+								<div class="col-sm-6">
+									{{form.tipo_tiempo_residencia}}
+								</div>
+								<div class="col-sm-12">
+									<span class="text-red" >{{form.tiempo_residencia.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.direccion.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.direccion}}
+									<span class="text-red" >{{form.direccion.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.numero_licencia_conducir.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.numero_licencia_conducir}}
+									<span class="text-red" >{{form.numero_licencia_conducir.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_nacimiento.label}}</label></div>
+								{{form.fecha_nacimiento}}
+								<div class="col-sm-12">
+									<span class="text-red" >{{form.fecha_nacimiento.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.celular.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.celular}}
+									<span class="text-red" >{{form.celular.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.celular_dos.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.celular_dos}}
+									<span class="text-red" >{{form.celular_dos.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.telefono_fijo.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.telefono_fijo}}
+									<span class="text-red" >{{form.telefono_fijo.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.nacionalidad.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.nacionalidad}}
+									<span class="text-red" >{{form.nacionalidad.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.ingles.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.ingles}}
+									<span class="text-red" >{{form.ingles.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.estado_civil.label}}</label></div>
+								<div class="col-sm-12">
+									{% for estado_civil in form.estado_civil %}
+										<label class="checkbox-inline">
+											{{estado_civil}}
+										</label>
+									{% endfor %}
+									<span class="text-red" >{{form.estado_civil.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12">
+									<div class="col-sm-12"><label class="control-label">{{form.discapacitado.label}}</label></div>
+									<div class="col-sm-12">
+										{% for discapacitado in form.discapacitado %}
+											<label class="checkbox-inline">
+												{{discapacitado}}
+											</label>
+										{% endfor %}
+										<span class="text-red" >{{form.discapacitado.errors}}</span>
+									</div>
+								</div>
+								<div id="tipo_discapacidad" class="col-sm-12" style="display: none" >
+									<div class="col-sm-12"><label class="control-label">(*) {{form.tipo_discapacidad.label}}</label></div>
+									{{form.tipo_discapacidad}}
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="input-group">
+									<input type="file" name="imagen">
+									<div class="input-group">
+										<input type="text" readonly="" class="form-control" placeholder="Subir Foto">
+										<span class="input-group-btn input-group-sm">
+											<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+											<i class="zmdi zmdi-face"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+								{% if form.instance.imagen %}
+									<label for="">Foto actual</label>
+									<img src="{{form.instance.imagen.url}}" width="50px" height="50px" alt="" class="img-thumbnail">
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="row m-t-10">
+						<div class="col-sm-12">
+							<div class="col-sm-1 text-right">
+								{{form.declaro}}
+							</div>
+							<div class="col-sm-11 text-left">
+								<label for="{{form.declaro.id_for_label}}" class="control-label">{{form.declaro.label}}</label>
+							</div>
+							<span class="text-red" >{{form.declaro.errors}}</span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center col-sm-12">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							<a href="/personas/" class="btn btn-round btn-danger" >cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{form.media}}
+{% endblock extra-js %}

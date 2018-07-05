@@ -1,0 +1,25 @@
+<div class="col-sm-9">
+	<h2> <strong>persona:</strong> {{persona.nombres|upper}} {{persona.apellidos|upper}} <strong>nº documento:</strong> {{persona.numero_documento}} </h2>
+</div>
+<div class="col-sm-3">
+	<div class="dropdown">
+		<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			acciones
+			<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+			{% if perms.usuarios.change_persona %}
+				<li>
+					<a href="/personas/{{persona.uuid}}/editar/" class="text-uppercase" ><i class="zmdi zmdi-edit"></i> editar</a>
+				</li>
+			{% endif %}
+			<li>
+				<a href="/personas/{{persona.uuid}}/pdf/" class="text-uppercase" ><i class="zmdi zmdi-eye"></i> ver pdf</a>
+			</li>
+			<li><a href="/educativo/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> EDUCACIÓN</a></li>
+			<li><a href="/laboral/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> LABORAL</a></li>
+			<li><a href="/cursos/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> ESTUDIOS COMPLEMENTARIOS</a></li>
+			<li><a href="/personas/{{persona.uuid}}/documentos/add/" ><i class="zmdi zmdi-plus-circle"></i> DOCUMENTOS</a></li>
+		</ul>
+	</div>
+</div>

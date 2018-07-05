@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% include "messages.html" %}
+				<form method="POST" class="form-horizontal" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.persona.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.persona}}
+									<span class="text-red" >{{form.persona.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.tipo.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.tipo}}
+									<span class="text-red" >{{form.tipo.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div id="block_capacitacion" class="col-sm-3" {% if not form.capacitacion.errors %} style="display:none;" {% endif %} >
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.capacitacion.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.capacitacion}}
+									<span class="text-red" >{{form.capacitacion.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha.label}}</label></div>
+								<div class="col-sm-12">
+									<div class="input-group">
+										<span for="fecha_inicio" class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										<input type="text" class="form-control datepicker" name="fecha" id="fecha_inicio" type="date" value="{{form.fecha.value}}" autocomplete="off" required >
+										<span class="text-red" >{{form.fecha.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.hora_inicio.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.hora_inicio}}
+									<span class="text-red" >{{form.hora_inicio.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center col-sm-12">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							<a href="/atenciones/" class="btn btn-round btn-danger" >cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{form.media}}
+{% endblock extra-js %}

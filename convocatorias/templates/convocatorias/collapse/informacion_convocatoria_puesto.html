@@ -1,0 +1,123 @@
+<div class="col-sm-12">
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingInfoConvocatoria">
+				<h4 class="panel-title">
+					<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_convocatoria_puesto" aria-expanded="true" aria-controls="collapse_convocatoria_puesto">Informacion</a>
+				</h4>
+			</div>
+			<div id="collapse_convocatoria_puesto" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfoConvocatoria">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="col-sm-6"><label>Rango:</label> {{convocatoria_puesto.rango.descripcion|upper}}</div>
+							<div class="col-sm-6"><label>Familia:</label> {{convocatoria_puesto.familia_puesto.descripcion|upper}}</div>
+							<div class="col-sm-6"><label>Especialidad:</label> {{convocatoria_puesto.especialidad.descripcion|upper}}</div>
+							<div class="col-sm-6"><label>SubEspecialidad:</label> {{convocatoria_puesto.sub_especialidad.descripcion|upper}}</div>
+							<div class="col-sm-6"><label>Duración:</label> {{convocatoria_puesto.duracion_contrato.descripcion|upper}}</div>
+							<div class="col-sm-6"><label>Vacantes:</label> {{convocatoria_puesto.cantidad_vacantes}}</div>
+						</div>
+						<div class="col-sm-6">
+							<label>Requisitos:</label>
+							<ul>
+								{% for requisito in convocatoria_puesto.requisitos.all %}
+									<li>{{requisito.descripcion}}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="col-sm-12">
+								<h3 class="alert alert-info" >Académico</h3>
+							</div>
+							<div class="list-group">
+								{% for academico in convocatoria_puesto.peq_int_convocatoria_academico_set.all %}
+									<li class="list-group-item">
+										<div class="col-sm-12">
+											<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+											<div class="list-group-item-body">
+												<div class="list-group-item-heading">
+													{{academico.grado.descripcion}}
+												</div>
+												<div class="list-group-item-text">
+													<p>
+														{{academico.estado_grado.descripcion}}
+													</p>
+												</div>
+											</div>
+										</div>
+									</li>
+								{% endfor %}
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="col-sm-12">
+								<h3 class="alert alert-info" >Experiencia</h3>
+							</div>
+							<div class="list-group">
+								{% for experiencia in convocatoria_puesto.peq_int_convocatoria_experiencia_set.all %}
+									<li class="list-group-item">
+										<div class="col-sm-12">
+											<!--<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span> -->
+											<div class="list-group-item-body">
+												<div class="list-group-item-heading">
+													{% if experiencia.rango %} <strong>Rango: </strong>{{experiencia.rango.descripcion|upper}}<br>{% endif %}
+													{% if experiencia.familia_puesto %} <strong>Familia: </strong>{{experiencia.familia_puesto.descripcion|upper}}<br>{% endif %}
+													{% if experiencia.especialidad %} <strong>Especialidad: </strong>{{experiencia.especialidad.descripcion|upper}}<br>{% endif %}
+													{% if experiencia.sub_especialidad %} <strong>SubEspecialidad: </strong>{{experiencia.sub_especialidad.descripcion|upper}}<br>{% endif %}
+													{% if experiencia.experiencia %} <strong>Tiempo: </strong>{{experiencia.experiencia|upper}} {% endif %}
+												</div>
+											</div>
+										</div>
+									</li>
+								{% endfor %}
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="col-sm-12">
+								<h3 class="alert alert-info" >Cursos</h3>
+							</div>
+							<div class="list-group">
+								{% for curso in convocatoria_puesto.peq_int_convocatoria_cursos_set.all %}
+									<li class="list-group-item">
+										<div class="col-sm-12">
+											<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+											<div class="list-group-item-body">
+												<div class="list-group-item-heading">
+													{{curso.tipo.descripcion}} {% if curso.indispensable %} (Indispensable) {% endif %}
+												</div>
+												<div class="list-group-item-text">
+													<p>{{curso.descripcion}}</p>
+												</div>
+											</div>
+										</div>
+									</li>
+								{% endfor %}
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="col-sm-12">
+								<h3 class="alert alert-info" >Documentos</h3>
+							</div>
+							<div class="list-group">
+								{% for documento in convocatoria_puesto.peq_int_convocatoria_documentos_set.all %}
+									<li class="list-group-item">
+										<div class="col-sm-12">
+											<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+											<div class="list-group-item-body">
+												<div class="list-group-item-heading">
+													{{documento.detalle_documento.descripcion}} {% if documento.indispensable %} (Indispensable) {% endif %}
+												</div>
+											</div>
+										</div>
+									</li>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,99 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="about">
+		<div class="container">
+			<div id="message_postulacion" class="alert" role="alert"></div>
+			{% if not user.persona.verificado and user.is_authenticated %}
+				<div class="alert alert-danger" role="alert" >Aún no estas verificado, acércate a recepción para validar tus documentos.</div>
+			{% endif %}
+			<div class="row">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-10 text-center"><h3 class="text-info text-uppercase" >{{title}}</h3></div>
+				<div class="col-sm-1">
+					{% if user.is_authenticated %}
+						{% if user.persona.verificado %}
+							{% if postulacion %}
+								<div><span class="text-success" >Postulado</span></div>
+							{% else %}
+								<div><button type="button" class="btn btn-success text-uppercase publico_postular_puesto" data-puesto="{{puesto.uuid}}" >postular</button></div>
+							{% endif %}
+						{% endif %}
+					{% endif %}
+				</div>
+			</div>
+			<div class="row">
+				<h4 class="text-uppercase" >I. Información general</h4>
+			</div>
+			<div class="row">
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Convocatoria:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.convocatoria.nombre}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Contratista:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.convocatoria.contratista.nombre}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>(Cantidad de vacantes) nombre del puesto:</strong></h6></div>
+					<div class="col-sm-12">{{title}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Inicio / Cierre de postulación:</strong></h6></div>
+					<div class="col-sm-12">{% if estado.fecha_inicio %} {{estado.fecha_inicio|date:'d'}} de {{estado.fecha_inicio|date:'F Y'}} {% endif %} {% if estado.fecha_fin %} / {{estado.fecha_fin|date:'d'}} de {{estado.fecha_fin|date:'F Y'}} {% endif %}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Remuneración:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.convocatoria.remuneracion.descripcion}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Duración:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.duracion_contrato.descripcion}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Duración:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.duracion_contrato.descripcion}}</div>
+				</div>
+				<div class="col-sm-6 row" style="margin-top: 10px;">
+					<div class="col-sm-12"><h6><strong>Condiciones adicionales:</strong></h6></div>
+					<div class="col-sm-12">{{puesto.convocatoria.condiciones_adicionales}}</div>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 15px;" >
+				<h4 class="text-uppercase" >II. requisitos</h4>
+			</div>
+			<!-- FORMACIÓN ACADEMICA -->
+			<div class="row">
+				<div class="col-sm-12 row text-center text-uppercase" style="margin-top: 10px;"><h6>formación académica</h6></div>
+				<ul class="row">
+					{% for educativo in puesto.peq_int_convocatoria_academico_set.all %}
+						<li class="col-sm-12" >{{educativo.grado.descripcion}} {{educativo.estado_grado.descripcion}} {{educativo.carrera.descripcion}}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<!-- EXPERIENCIA LABORAL -->
+			<div class="row">
+				<div class="col-sm-12 row text-center text-uppercase" style="margin-top: 10px;"><h6>experiencia laboral</h6></div>
+				<ul class="row">
+					{% for educativo in puesto.peq_int_convocatoria_experiencia_set.all %}
+						{% if educativo.tipo_registro == 0 %}
+							<li class="col-sm-12" >{{educativo.rango.descripcion}} {{educativo.sub_especialidad.descripcion}} {{educativo.especialidad.descripcion}} {{educativo.experiencia.tiempo}} {{educativo.experiencia.get_tipo_display}}</li>
+						{% endif %}
+					{% endfor %}
+					{% for requisito in puesto.requisitos.all %}
+						<li class="col-sm-12" >{{requisito.descripcion}}</li>
+					{% endfor %}
+				</ul>
+			</div>
+			<!-- CURSOS CAPACITACIONES -->
+			<div class="row">
+				<div class="col-sm-12 row text-center text-uppercase" style="margin-top: 10px;"><h6>cursos / capacitaciones</h6></div>
+				<ul class="row">
+					{% for curso in puesto.peq_int_convocatoria_cursos_set.all %}
+						<li class="col-sm-12" >{{curso.tipo.descripcion}} {{curso.nombre.descripcion}} {{curso.descripcion}}</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</section>	
+{% endblock content %}

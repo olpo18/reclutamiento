@@ -1,0 +1,36 @@
+<div class="table-responsive">
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Nombres</th>
+				<th>Apellidos</th>
+				<th>Nº Documento</th>
+				<th>Email</th>
+				<th>Género</th>
+				<th>Estado</th>
+				<th>Celular</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for estado in registros %}
+				<tr>
+					<th scope="row">{{forloop.counter}}</th>
+					<td>{{estado.postulacion.persona.nombres}}</td>
+					<td>{{estado.postulacion.persona.apellidos}}</td>
+					<td>{{estado.postulacion.persona.numero_documento}}</td>
+					<td>{{estado.postulacion.persona.email}}</td>
+					<td>{{estado.postulacion.persona.get_genero_display}}</td>
+					<td>{{estado.postulacion.persona.get_estado_civil_display}}</td>
+					<td>{{estado.postulacion.persona.celular|default:''}} {{estado.postulacion.persona.celular_dos|default:''}}</td>
+					<td>
+						<button type="button" class="btn btn-info btn-sm btn-round btn-view-detail" data-persona="{{estado.postulacion.persona.uuid}}" data-toggle="modal" data-target="#modal__view_detail" >
+							<span data-toggle="tooltip" data-placement="top" title="ver detalle" ><i class="zmdi zmdi-eye"></i></span>
+						</button>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>

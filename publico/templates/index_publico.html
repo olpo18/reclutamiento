@@ -1,0 +1,137 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<!-- <div id="home">
+		<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+			<ol class="carousel-indicators">
+				<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+				<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+				<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+			</ol>
+			<div class="carousel-inner">
+				<div class="carousel-item item active">
+					<img class="d-block w-100" src="{% static 'assets/images/bg-1.jpg' %}" alt="First slide" />
+					<div class="carousel-caption">
+						<div class="full-width">
+							<p class="subtitle animated bounceInRight">One Page Responsive for Your</p>
+							<h3 class="animated bounceInLeft" style="animation-duration: 2s;">oipc</h3>
+							<p><a href="#team" class="btn btn-action animated bounceInRight">ver convocatorias</a></p>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item item">
+					<img class="d-block w-100" src="{% static 'assets/images/bg-2.jpg' %}" alt="Second slide" />
+					<div class="carousel-caption">
+						<div class="full-width">
+							<p class="subtitle animated bounceInRight">One Page Responsive for Your</p>
+							<h3 class="animated bounceInLeft">Agency Website</h3>
+							<p><a href="#team" class="btn btn-action animated bounceInRight">ver convocatorias</a></p>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-item item">
+					<img class="d-block w-100" src="{% static 'assets/images/bg-3.jpg' %}" alt="Third slide" />
+					<div class="carousel-caption">
+						<div class="full-width">
+							<p class="subtitle animated bounceInRight">One Page Responsive for Your</p>
+							<h3 class="animated bounceInLeft">Business Website</h3>
+							<p><a href="#team" class="btn btn-action animated bounceInRight">ver convocatorias</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+				<i class="fa fa-angle-left" aria-hidden="true"></i>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+				<i class="fa fa-angle-right" aria-hidden="true"></i>
+				<span class="sr-only">Next</span>
+			</a>
+		</div>
+	</div>-->
+	<section id="about">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Convocatorias</h3>
+				</div>
+				{% for estado in convocatorias %}
+					{% for puesto in estado.convocatoria.convocatoriapuesto_set.all %}
+						<div class="col-sm-4">
+							<div class="card">
+								<a href="/publico/convocatoria/puesto/{{puesto.uuid}}/">
+									<img class="card-img-top" src="http://orc.com.pe/wp-content/uploads/2015/07/banner2-400x260.jpg" alt="Card image cap">
+								</a>
+								<div class="card-body">
+									<a href="/publico/convocatoria/puesto/{{puesto.uuid}}/" class="btn-link" >
+										<h4>({{puesto.cantidad_vacantes}}) {{puesto.rango.descripcion}} {{puesto.especialidad.descripcion}}</h4>
+									</a>
+									<p class="card-text" >{% if estado.fecha_inicio %} {{estado.fecha_inicio|date:'d'}} de {{estado.fecha_inicio|date:'F Y'}} {% endif %} {% if estado.fecha_fin %} <strong>al</strong> {{estado.fecha_fin|date:'d'}} de {{estado.fecha_fin|date:'F Y'}} {% endif %}</p>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+	
+	<section id="services">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Pre Seleccionados</h3>
+				</div>
+				{% for preseleccionado in preseleccionados %}
+					{% for puesto_preseleccionado in convocatoria_puestos_preseleccionados %}
+						{% if preseleccionado.postulacion__convocatoria_puesto == puesto_preseleccionado.uuid %}
+							<div class="col-sm-4">
+								<div class="card">
+									<a href="/publico/convocatoria/puesto/{{puesto_preseleccionado.uuid}}/{{preseleccionado.fecha|date:"Y-m-d"}}/preseleccionados/">
+										<img class="card-img-top" src="http://orc.com.pe/wp-content/uploads/2015/07/banner2-400x260.jpg" alt="Card image cap">
+									</a>
+									<div class="card-body">
+										<a href="/publico/convocatoria/puesto/{{puesto_preseleccionado.uuid}}/{{preseleccionado.fecha|date:"Y-m-d"}}/preseleccionados/" class="btn-link" >
+											<h4>({{puesto_preseleccionado.cantidad_vacantes}}) {{puesto_preseleccionado.rango.descripcion}} {{puesto_preseleccionado.especialidad.descripcion}}</h4>
+										</a>
+										<p class="card-text" > <strong>({{preseleccionado.total}}) preseleccionados </strong> hasta el {% if preseleccionado.fecha %} {{preseleccionado.fecha|date:'d'}} de {{preseleccionado.fecha|date:'F Y'}} {% endif %}</p>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+	<section id="team">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Seleccionados</h3>
+				</div>
+				{% for seleccionado in seleccionados %}
+					{% for puesto_seleccionado in convocatoria_puestos_seleccionados %}
+						{% if seleccionado.postulacion__convocatoria_puesto == puesto_seleccionado.uuid %}
+							<div class="col-sm-4">
+								<div class="card">
+									<a href="/publico/convocatoria/puesto/{{puesto_seleccionado.uuid}}/{{seleccionado.fecha|date:"Y-m-d"}}/seleccionados/">
+										<img class="card-img-top" src="http://orc.com.pe/wp-content/uploads/2015/07/banner2-400x260.jpg" alt="Card image cap">
+									</a>
+									<div class="card-body">
+										<a href="/publico/convocatoria/puesto/{{puesto_seleccionado.uuid}}/{{seleccionado.fecha|date:"Y-m-d"}}/seleccionados/" class="btn-link" >
+											<h4>({{puesto_seleccionado.cantidad_vacantes}}) {{puesto_seleccionado.rango.descripcion}} {{puesto_seleccionado.especialidad.descripcion}}</h4>
+										</a>
+										<p class="card-text" > <strong>({{seleccionado.total}}) seleccionados </strong> hasta el {% if seleccionado.fecha %} {{seleccionado.fecha|date:'d'}} de {{seleccionado.fecha|date:'F Y'}} {% endif %}</p>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endblock content %}

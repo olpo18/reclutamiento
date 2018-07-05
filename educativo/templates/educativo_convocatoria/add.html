@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}}
+						</div>
+					{% endfor %}
+				{% endif %}
+				{% if form %}
+					<form method="POST" class="form-horizontal" action="" >
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Nivel de Estudios</label></div>
+									<div class="col-sm-12">
+										{{form.grado}}
+										<span class="text-red" >{{form.grado.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.estado_grado.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.estado_grado}}
+										<span class="text-red" >{{form.estado_grado.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div id="familia_carrera" class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.familia_carrera.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.familia_carrera}}
+										<span class="text-red" >{{form.familia_carrera.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div id="carrera" class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.carrera.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.carrera}}
+										<span class="text-red" >{{form.carrera.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-2">{{form.indispensable}}</div>
+									<div class="col-sm-10"><label for="{{form.indispensable.id_for_label}}" class="control-label">{{form.indispensable.label}}</label></div>
+									<span class="text-red" >{{form.indispensable.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group text-center">
+								<button type="submit" class="btn btn-info btn-round">guardar</button>
+								{% if form.instance.id %}
+									<a class="btn btn-round btn-danger" href="/educativo/puesto/{{convocatoria_puesto.uuid}}/add/">cancelar</a>
+								{% endif %}
+							</div>
+						</div>
+					</form>
+				{% endif %}
+				<div class="card-body p-0 border-top">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nivel de estudio</th>
+									<th>Estado</th>
+									<th>Familia</th>
+									<th>Carrera</th>
+									<th>Indispensable</th>
+									<th>Opción</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for educativo in convocatoria_puesto.peq_int_convocatoria_academico_set.all|dictsortreversed:'fecha_creacion' %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{educativo.grado.descripcion}}</td>
+										<td>{{educativo.estado_grado.descripcion}}</td>
+										<td>{% if educativo.familia_carrera %} {{educativo.familia_carrera.descripcion}} {% endif %}</td>
+										<td>{% if educativo.carrera %} {{educativo.carrera.descripcion}} {% endif %}</td>
+										<td>{% if educativo.indispensable %} SI {% else %} NO {% endif %}</td>
+										<td>
+											<a href="/educativo/puesto/{{convocatoria_puesto.uuid}}/edit/{{educativo.pk}}/" class="btn btn-success btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+											</a>
+											<a href="/educativo/puesto/{{convocatoria_puesto.uuid}}/delete/{{educativo.pk}}/" class="btn btn-danger btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{ form.media }}
+{% endblock extra-js %}

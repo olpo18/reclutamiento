@@ -1,0 +1,48 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="about">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 text-center"><h3 class="text-info text-uppercase" >{{title}}</h3></div>
+			</div>
+			{% if message.value %}
+				<div class="row">
+					<div class="alert alert-{{message.class}}" role="alert" >{{message.value}}</div>
+				</div>
+			{% endif %}
+			<div class="row">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">CONVOCATORIA</th>
+							<th scope="col">PUESTO</th>
+							<th scope="col">FECHA POSTULACION</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for postulacion in postulaciones %}
+							<tr>
+								<th scope="row">{{forloop.counter}}</th>
+								<td>
+									{{postulacion.convocatoria_puesto.convocatoria.nombre|upper}} {{postulacion.convocatoria_puesto.convocatoria.codigo|upper}} 
+								</td>
+								<td>
+									{{postulacion.convocatoria_puesto.rango.descripcion|upper}} {{postulacion.convocatoria_puesto.especialidad.descripcion|upper}} {{postulacion.convocatoria_puesto.sub_especialidad.descripcion|upper}} {{postulacion.convocatoria_puesto.familia_puesto.descripcion|upper}}
+								</td>
+								<td>
+									{{postulacion.fecha_creacion}}
+								</td>
+							</tr>
+						{% empty %}
+							<tr class="text-center" >
+								<td colspan="2" >No tienes postulaciones</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>	
+{% endblock content %}

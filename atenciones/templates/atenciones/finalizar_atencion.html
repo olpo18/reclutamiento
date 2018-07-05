@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% include "messages.html" %}
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="col-sm-12">
+							<label for=""><strong>Nº Documento</strong></label>
+						</div>
+						<div class="col-sm-12"><span>{{atencion.persona.numero_documento}}</span></div>
+					</div>
+					<div class="col-sm-3">
+						<div class="col-sm-12">
+							<label for=""><strong>Nombres</strong></label>
+						</div>
+						<div class="col-sm-12"><span>{{atencion.persona.nombres|upper}}</span></div>
+					</div>
+					<div class="col-sm-3">
+						<div class="col-sm-12">
+							<label for=""><strong>Apellidos</strong></label>
+						</div>
+						<div class="col-sm-12"><span>{{atencion.persona.apellidos|upper}}</span></div>
+					</div>
+					<div class="col-sm-3">
+						<div class="col-sm-12">
+							<label for=""><strong>Tipo</strong></label>
+						</div>
+						<div class="col-sm-12">
+							<span>{{atencion.tipo.descripcion|upper}}</span>
+							{% if atencion.capacitacion %}
+								<br>
+								<span>
+									<strong>Nombre: </strong> 
+									{{atencion.capacitacion.descripcion}}
+								</span>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				<form method="POST" class="form-horizontal" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-2">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_finalizacion.label}}</label></div>
+								<div class="col-sm-12">
+									<div class="input-group">
+										<span for="fecha_inicio" class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										<input type="text" class="form-control datepicker" name="fecha_finalizacion" id="fecha_inicio" type="date" value="{{form.fecha_finalizacion.value}}" autocomplete="off" required >
+										<span class="text-red" >{{form.fecha_finalizacion.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.hora_fin.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.hora_fin}}
+									<span class="text-red" >{{form.hora_fin.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.observaciones.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.observaciones}}
+									<span class="text-red" >{{form.observaciones.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center col-sm-12">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							<a href="/atenciones/" class="btn btn-round btn-danger" >cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{form.media}}
+{% endblock extra-js %}

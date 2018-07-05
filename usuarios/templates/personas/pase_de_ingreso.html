@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		{% include "convocatorias/title_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+		{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+	</div>
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Puesto: ({{convocatoria_puesto.cantidad_vacantes}}) {{convocatoria_puesto.rango.descripcion|lower}} {{convocatoria_puesto.sub_especialidad.descripcion|lower}} / {{convocatoria_puesto.familia_puesto.descripcion|lower}} {{convocatoria_puesto.especialidad.descripcion|lower}}</h1>
+		</div>
+		<div class="col-sm-3">
+			{% include "convocatorias/acciones_puesto.html" %}
+		</div>
+		{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+	</div>
+	<div class="row">
+		<a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/pdf/pases_de_ingreso/" class="btn btn-round btn-warning" >descargar pdf</a>
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm-offset-3 col-sm-6">
+						{% for registro in registros %}
+							<a href="{{registro.criterio.uuid}}/" data-uuid="{{registro.criterio.uuid}}" class="btn btn-info btn-block registro__aprobacion">({{registro.criterio.alias}}) {{registro.criterio.descripcion}} <br> <strong>TOTAL:</strong> {{registro.total}}</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

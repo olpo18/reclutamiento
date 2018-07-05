@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	{% if convocatoria %}
+		<div class="row">
+			<a href="/convocatorias/?name_codigo={{convocatoria.nombre}}" class="btn btn-success btn-flat"><i class="zmdi zmdi-mail-reply"></i> Regresar a la convocatoria {{convocatoria.nombre}}</a>
+		</div>
+	{% endif %}
+	<div class="row bg-white m-b-10">
+		<div class="col-sm-10">
+			<h2>{{persona.nombres}} {{persona.apellidos}}</h2>
+		</div>
+		<div class="col-sm-2">
+			<div class="dropdown">
+				<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					acciones
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					{% if perms.usuarios.change_persona %}
+						<li>
+							<a href="/personas/{{persona.uuid}}/editar/" ><i class="zmdi zmdi-edit"></i> editar</a>
+						</li>
+					{% endif %}
+					<li>
+						<a href="/personas/{{persona.uuid}}/pdf/" ><i class="zmdi zmdi-eye"></i> ver pdf</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		{% if perms.usuarios.add_informacioneducativa %}
+			<div class="col-sm-4">
+				<div class="card">
+					<div class="card-body">
+						<h2 class="text-center" >Educativo</h2>
+						<form method="POST" id="form-educativo" class="form-horizontal" data-url="/personas/{{uuid}}/educativo/" >
+							{% csrf_token %}
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">Nivel de Estudios</label>
+								<div class="col-md-9">{{ form_educativo.grado }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_educativo.centro_estudio.label }}</label>
+								<div class="col-md-9">{{ form_educativo.centro_estudio }}</div>
+							</div>
+							<div id="nombre-centro-otros" class="form-group is-empty" style="display: none;" >
+								<label class="col-md-3 control-label">{{ form_educativo.nombre.label }}</label>
+								<div class="col-md-9">{{ form_educativo.nombre }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">Estado</label>
+								<div class="col-md-9">{{ form_educativo.estado_grado }}</div>
+							</div>
+							<div id="familia_carrera" class="form-group is-empty">
+								<label class="col-md-3 control-label">Área de Estudios</label>
+								<div class="col-md-9">{{ form_educativo.familia_carrera }}</div>
+							</div>
+							<div id="carrera" class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_educativo.carrera.label }}</label>
+								<div class="col-md-9">{{ form_educativo.carrera }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<div class="col-sm-3"><label class="control-label">{{form_educativo.fecha_inicio.label}}</label></div>
+								<div class="col-sm-9">{{form_educativo.fecha_inicio}}</div>
+							</div>
+							<div id="fecha_fin_block" class="form-group is-empty">
+								<div class="col-md-3"><label class="control-label">{{form_educativo.fecha_fin.label}}</label></div>
+								<div class="col-md-9">{{form_educativo.fecha_fin}}</div>
+							</div>
+							<div class="form-group">
+								<div class="checkbox col-md-offset-3">
+									<label>
+										<input id="hasta_actualidad_one" type="checkbox" name="hasta_actualidad" value=""> hasta actualidad
+									</label>
+								</div>
+							</div>
+							<div id="message-form-educativo"></div>
+							<div class="form-group text-center">
+								<button type="submit" class="btn btn-info btn-round">agregar</button>
+							</div>
+						</form>
+						<div class="card-body p-0 border-top">
+							<ul id="list-educativo" class="list-group">
+								{% for data in data_educativo %}
+									<li class="list-group-item ">
+										<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+										<div class="list-group-item-body">
+											<div class="list-group-item-heading">{{data.estado_grado.descripcion}}</div>
+											<p>{{data.grado.descripcion}} / {{data.carrera.descripcion}} ({{data.fecha_inicio|timesince:data.fecha_fin}})</p>
+										</div>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		{% if perms.usuarios.add_informacionlaboral %}
+			<div class="col-sm-4">
+				<div class="card">
+					<div class="card-body">
+						<h2 class="text-center" >Laboral</h2>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="form-group is-empty">
+									<div class="col-sm-12">
+										<input type="text" id="autocomplete_puesto" name="autocomplete_puesto" class="form-control" placeholder="Ingresar nombre del puesto">
+									</div>
+								</div>
+								<div id="result__autocomplete" class="row m-b-20 m-t-10" ></div>
+							</div>
+						</div>
+						<form method="POST" id="form-laboral" class="form-horizontal" data-url="/personas/{{uuid}}/laboral/" >
+							{% csrf_token %}
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">Nombre de la empresa</label>
+								<div class="col-md-9">{{ form_laboral.empresa }}</div>
+							</div>
+							<div id="nombre-empresa-otros" class="form-group is-empty" style="display: none;" >
+								<label class="col-md-3 control-label">{{ form_laboral.nombre.label }}</label>
+								<div class="col-md-9">{{ form_laboral.nombre }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_laboral.familia_puesto.label }}</label>
+								<div class="col-md-9">{{ form_laboral.familia_puesto }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_laboral.especialidad.label }}</label>
+								<div class="col-md-9">{{ form_laboral.especialidad }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_laboral.sub_especialidad.label }}</label>
+								<div class="col-md-9">{{ form_laboral.sub_especialidad }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<label class="col-md-3 control-label">{{ form_laboral.rango.label }}</label>
+								<div class="col-md-9">{{ form_laboral.rango }}</div>
+							</div>
+							<div class="form-group is-empty">
+								<div class="col-sm-3"><label class="control-label">{{form_laboral.fecha_inicio.label}}</label></div>
+								<div class="col-sm-9">{{form_laboral.fecha_inicio}}</div>
+							</div>
+							<div id="fecha_fin_two_block" class="form-group is-empty">
+								<div class="col-md-3"><label class="control-label">{{form_laboral.fecha_fin.label}}</label></div>
+								<div class="col-md-9">{{form_laboral.fecha_fin}}</div>
+							</div>
+							<div class="form-group">
+								<div class="checkbox col-md-offset-3">
+									<label>
+										<input id="hasta_actualidad_two" type="checkbox" name="hasta_actualidad" value=""> hasta actualidad
+									</label>
+								</div>
+							</div>
+							<div id="message-form-laboral"></div>
+							<div class="form-group text-center">
+								<button type="submit" class="btn btn-info btn-round">agregar</button>
+							</div>
+						</form>
+						<div class="card-body p-0 border-top">
+							<ul id="list-laboral" class="list-group">
+								{% for data in data_laboral %}
+									<li class="list-group-item ">
+										<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+										<div class="list-group-item-body">
+											<div class="list-group-item-heading">{{data.rango.descripcion}}</div>
+											<p>{{data.sub_especialidad.descripcion}} {{data.especialidad.descripcion}} ({{ data.fecha_inicio|timesince:data.fecha_fin }})</p>
+										</div>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+		{% if perms.usuarios.add_documentospersonal %}
+			<div class="col-sm-4">
+			<div class="card">
+				<div class="card-body">
+					<h2 class="text-center" >Documentos</h2>
+					<form id="form-documentos-persona" class="form-horizontal" enctype="multipart/form-data" method="POST" action="" >
+						{% csrf_token %}
+						{% if message.value %}
+							<span class="text-{{message.class}}" >{{message.value}}</span>
+						{% endif %}
+						<div class="form-group is-empty">
+							<div class="col-sm-12"><label class="control-label">{{form_documentos.tipo.label}}</label></div>
+							<div class="col-sm-12">
+								{{form_documentos.tipo}}
+								<span class="text-red" >{{form_documentos.tipo.errors}}</span>
+							</div>
+						</div>
+						<!-- <div class="form-group is-empty">
+							<div class="col-sm-12"><label class="control-label">{{form_documentos.nombre.label}}</label></div>
+							<div class="col-sm-12">
+								{{form_documentos.nombre}}
+								<span class="text-red" >{{form_documentos.nombre.errors}}</span>
+							</div>
+						</div> -->
+						<div class="form-group is-empty">
+							<div class="input-group">
+								{{form_documentos.documento}}
+								<div class="input-group col-sm-offset-2">
+									<input type="text" readonly="" required="required" class="form-control" placeholder="Subir Documento">
+									<span class="input-group-btn input-group-sm">
+										<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+										<i class="zmdi zmdi-face"></i>
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div id="message-form-documentos"></div>
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">agregar</button>
+						</div>
+					</form>
+					<div class="card-body border-top">
+						{% for obj in data_documentos %}
+							<a target="_blank" href="{{obj.documento.url}}" class="btn btn-flat btn-info" ><i class="zmdi zmdi-eye"></i>{{obj.tipo.descripcion}}</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			</div>
+		{% endif %}
+		{% if perms.usuarios.add_cursospostulantes %}
+			<div class="col-sm-4">
+			<div class="card">
+				<div class="card-body">
+					<h2 class="text-center" >Estudios Complementarios</h2>
+					<form id="form-cursos-persona" class="form-horizontal" method="POST" action="" data-url="/personas/{{uuid}}/cursos/" >
+						{% csrf_token %}
+						<div class="form-group is-empty">
+							<div class="col-sm-12"><label class="control-label">{{form_cursos.tipo.label}}</label></div>
+							<div class="col-sm-12">{{form_cursos.tipo}}</div>
+						</div>
+						<div class="form-group is-empty">
+							<div class="col-sm-12"><label class="control-label">{{form_cursos.nombre.label}}</label></div>
+							<div class="col-sm-12">{{form_cursos.nombre}}</div>
+						</div>
+						<div class="form-group is-empty">
+							<div class="col-sm-12"><label class="control-label">{{form_cursos.descripcion.label}}</label></div>
+							<div class="col-sm-12">{{form_cursos.descripcion}}</div>
+						</div>
+						<div id="message-form-cursos"></div>
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">agregar</button>
+						</div>
+					</form>
+					<div class="card-body border-top">
+						<ul id="list-cursos" class="list-group">
+							{% for obj in persona.cursospostulantes_set.all %}
+								<li class="list-group-item ">
+									<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+									<div class="list-group-item-body">
+										<div class="list-group-item-heading">{{obj.tipo.descripcion}} {{obj.nombre.descripcion}}</div>
+										<p>{{obj.descripcion}}</p>
+									</div>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

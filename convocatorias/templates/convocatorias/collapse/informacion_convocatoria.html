@@ -1,0 +1,47 @@
+<div class="col-sm-12">
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+		<div class="panel panel-default">
+			<div class="panel-heading" role="tab" id="headingInfoConvocatoria">
+				<h4 class="panel-title">
+					<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseInfoConvocatoria" aria-expanded="true" aria-controls="collapseInfoConvocatoria">Informacion</a>
+				</h4>
+			</div>
+			<div id="collapseInfoConvocatoria" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingInfoConvocatoria">
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >Código:</strong></div>
+								<div class="col-sm-8">{{convocatoria.codigo}}</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >contratista:</strong></div>
+								<div class="col-sm-8">{{convocatoria.contratista.nombre}}</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >Lugar:</strong></div>
+								<div class="col-sm-8">{{convocatoria.lugar.descripcion}}</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >inicio:</strong></div>
+								<div class="col-sm-8">{% if convocatoria.fecha_inicio %} {{convocatoria.fecha_inicio|date:'d'}} de {{convocatoria.fecha_inicio|date:'F Y'}} {% endif %}</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >fin:</strong></div>
+								<div class="col-sm-8">{% if convocatoria.fecha_fin %} {{convocatoria.fecha_fin|date:'d'}} de {{convocatoria.fecha_fin|date:'F Y'}} {% endif %}</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4"><strong class="text-uppercase" >remuneracion:</strong></div>
+								<div class="col-sm-8">{{convocatoria.remuneracion.descripcion}}</div>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="col-sm-12"><strong class="text-uppercase" >Condiciones Adicionales:</strong></div>
+							<div class="col-sm-12"><p>{{convocatoria.condiciones_adicionales}}</p></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

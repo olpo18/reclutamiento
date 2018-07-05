@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<h2 class="text-center" >SESIÓN DE PRE SELECCIÓN</h2>
+		<!-- <div class="col-sm-2">
+			<a href="/convocatorias/{{convocatoria_puesto.convocatoria.uuid}}/puestos/" class="btn btn-info btn-flat"><i class="zmdi zmdi-arrow-left"></i> regresar</a>
+		</div> -->
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>Convocatoria : {{convocatoria_puesto.convocatoria.nombre}}</h1>
+		</div>
+		{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+	</div>
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Puesto: ({{convocatoria_puesto.cantidad_vacantes}}) {{convocatoria_puesto.rango.descripcion|lower}} {{convocatoria_puesto.sub_especialidad.descripcion|lower}} / {{convocatoria_puesto.familia_puesto.descripcion|lower}} {{convocatoria_puesto.especialidad.descripcion|lower}}</h1>
+		</div>
+		<div class="col-sm-3">
+			{% include "convocatorias/acciones_puesto.html" %}
+		</div>
+		{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+	</div>
+	<div id="message__aprobar_rangos"></div>
+	<div class="row m-b-10 border-top border-bottom">
+		<h1>Postulantes</h1>
+		{% if postulados %}
+			<div class="col-sm-9">
+				{% for registro in postulados|dictsort:"orden" %}
+					<div class="col-sm-12">
+						<div class="col-sm-4">
+							<div class="checkbox checkbox-postulados">
+								<label>
+								<input type="checkbox" data-rango="{{registro.orden}}" >Aprobar {{registro.descripcion}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							Total: {{registro.data.total|default:0}} / Conf: {{registro.data.confirmados|default:0}} / No Conf: {{registro.data.no_confirmados|default:0}}
+						</div>
+						<div class="col-sm-4">
+							<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/preseleccionados/postulante/{{registro.orden}}/" target="blank" class="btn btn-primary btn-flat m-b-0 m-t-0 p-0" >ver detalle de preseleccionados</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="col-sm-3">
+				<button class="btn btn-info btn-block aprobar_rango" data-convocatoria="{{convocatoria_puesto.uuid}}" data-tipo="postulante" >ejecutar autorizacion</button>
+			</div>
+		{% else %}
+			<p>no hay registros</p>
+		{% endif %}
+	</div>
+	<div class="row m-b-10 border-top border-bottom">
+		<h1>Comite</h1>
+		{% if comite %}
+			<div class="col-sm-9">
+				{% for comt in comite|dictsort:"orden" %}
+					<div class="col-sm-12">
+						<div class="col-sm-4">
+							<div class="checkbox">
+								<label>
+								<input type="checkbox" data-rango="{{comt.orden}}" >Aprobar {{comt.descripcion}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							Total: {{comt.data.total|default:0}} / Conf: {{comt.data.confirmados|default:0}} / No Conf: {{comt.data.no_confirmados|default:0}}
+						</div>
+						<div class="col-sm-4">
+							<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/preseleccionados/manual/{{comt.orden}}/" target="blank" class="btn btn-primary btn-flat m-b-0 m-t-0 p-0" >ver detalle de preseleccionados</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="col-sm-3">
+				<button class="btn btn-info btn-block aprobar_rango" data-convocatoria="{{convocatoria_puesto.uuid}}" data-tipo="manual" >ejecutar autorizacion</button>
+			</div>
+		{% else %}
+			<p>no hay registros</p>
+		{% endif %}
+	</div>
+	<div class="row m-b-10 border-top border-bottom">
+		<h1>Base de datos</h1>
+		{% if base_datos %}
+			<div class="col-sm-9">
+				{% for bd in base_datos|dictsort:"orden" %}
+					<div class="col-sm-12">
+						<div class="col-sm-4">
+							<div class="checkbox">
+								<label>
+								<input type="checkbox" data-rango="{{bd.orden}}" >Aprobar {{bd.descripcion}}</label>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							Total: {{bd.data.total|default:0}} / Conf: {{bd.data.confirmados|default:0}} / No Conf: {{bd.data.no_confirmados|default:0}}
+						</div>
+						<div class="col-sm-4">
+							<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/preseleccionados/bd/{{bd.orden}}/" target="blank" class="btn btn-primary btn-flat m-b-0 m-t-0 p-0" >ver detalle de preseleccionados</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="col-sm-3">
+				<button class="btn btn-info btn-block aprobar_rango" data-convocatoria="{{convocatoria_puesto.uuid}}" data-tipo="BD" >ejecutar autorizacion</button>
+			</div>
+		{% else %}
+			<p>no hay registros</p>
+		{% endif %}
+	</div>
+{% endblock %}
+

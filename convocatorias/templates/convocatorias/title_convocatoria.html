@@ -1,0 +1,34 @@
+<div class="col-sm-12">
+	<div class="col-sm-10">
+		<h1 ><strong>Convocatoria: </strong> {{convocatoria.nombre}} {{convocatoria.codigo}}</h1>
+	</div>
+	<div class="col-sm-1">
+		<div class="dropdown">
+			<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				acciones
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+				{% if perms.convocatorias.change_convocatoria %}
+					<li>
+						<a href="/convocatorias/{{convocatoria.uuid}}/editar/">
+							<span><i class="zmdi zmdi-edit"></i></span> Editar
+						</a>
+					</li>
+				{% endif %}
+				{% if perms.convocatorias.delete_convocatoria %}
+					<li>
+						<a href="/convocatorias/{{convocatoria.uuid}}/eliminar/">
+							<span><i class="zmdi zmdi-delete"></i></span> Eliminar
+						</a>
+					</li>
+				{% endif %}
+				<li>
+					<a href="/convocatorias/{{convocatoria.uuid}}/puestos/">
+						<span><i class="zmdi zmdi-eye"></i></span> ver puestos
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

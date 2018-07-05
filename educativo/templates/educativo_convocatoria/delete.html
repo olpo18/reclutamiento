@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+	</div>
+	<div class="row bg-white">
+		<div class="col-sm-12">
+			{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-{{message.tags}}" role="alert">
+						{{message}}
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Nivel de estudios</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.grado.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Estado</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.estado_grado.descripcion}}</span></div>
+		</div>
+		{% if informacioneducativa.carrera %}
+			<div class="col-sm-4">
+				<div class="col-sm-12">
+					<label for=""><strong>Carrera</strong></label>
+				</div>
+				<div class="col-sm-12"><span>{{informacioneducativa.carrera.descripcion}}</span></div>
+			</div>
+		{% endif %}
+	</div>
+	<div class="row bg-white">
+		<form method="POST" class="form-horizontal" action="" >
+			{% csrf_token %}
+			<div class="row text-center">
+				<div class="col-sm-12">
+					<h5 class="text-uppercase" ><strong>deseas eliminar el registro ?</strong></h5>
+				</div>
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-round btn-success" >si</button>
+					<a href="/educativo/puesto/{{convocatoria_puesto.uuid}}/add/" class="btn btn-round btn-danger" >no</a>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

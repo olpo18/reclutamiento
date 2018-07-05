@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'personas/title_persona.html' %}
+	</div>
+	<div class="row bg-white">
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Empresa</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacionlaboral.empresa.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Rango</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacionlaboral.rango.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Familia Puesto</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacionlaboral.familia_puesto.descripcion}}</span></div>
+		</div>
+		{% if informacionlaboral.especialidad %}
+			<div class="col-sm-4">
+				<div class="col-sm-12">
+					<label for=""><strong>Especialidad</strong></label>
+				</div>
+				<div class="col-sm-12"><span>{{informacionlaboral.especialidad.descripcion}}</span></div>
+			</div>
+		{% endif %}
+		{% if informacionlaboral.sub_especialidad %}
+			<div class="col-sm-4">
+				<div class="col-sm-12">
+					<label for=""><strong>Sub Especialidad</strong></label>
+				</div>
+				<div class="col-sm-12"><span>{{informacionlaboral.sub_especialidad.descripcion}}</span></div>
+			</div>
+		{% endif %}
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Tiempo</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacionlaboral.fecha_inicio|timesince:informacionlaboral.fecha_fin}}</span></div>
+		</div>
+	</div>
+	<div class="row bg-white">
+		<form method="POST" class="form-horizontal" action="" >
+			{% csrf_token %}
+			<div class="row text-center">
+				<div class="col-sm-12">
+					<h5 class="text-uppercase" ><strong>deseas eliminar el registro ?</strong></h5>
+				</div>
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-round btn-success" >si</button>
+					<a href="/laboral/persona/{{persona.uuid}}/add/" class="btn btn-round btn-danger" >no</a>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

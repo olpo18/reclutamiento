@@ -1,0 +1,23 @@
+<div class="col-sm-12">
+	<div class="col-sm-8">
+		<h2>{{convocatoria_puesto.rango.descripcion|upper}} {{convocatoria_puesto.sub_especialidad.descripcion|upper}} {{convocatoria_puesto.especialidad.descripcion|upper}} {{convocatoria_puesto.familia_puesto.descripcion|upper}} </h2>
+	</div>
+	<div class="col-sm-2">
+		{% include "convocatorias/acciones_puesto.html" %}
+	</div>
+	<div class="col-sm-2">
+		<div class="btn-group">
+			<button type="button" class="btn btn-default btn-flat dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				elegir <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/editar/" ><i class="zmdi zmdi-edit"></i> Editar</a></li>
+				<li><a href="/educativo/puesto/{{convocatoria_puesto.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> Educación</a></li>
+				<li><a href="/laboral/puesto/{{convocatoria_puesto.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> Experiencia</a></li>
+				<li><a href="/cursos/puesto/{{convocatoria_puesto.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> Estudios Compl.</a></li>
+				<li><a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/documentos/add/" ><i class="zmdi zmdi-plus-circle"></i> Documentos</a></li>
+				<li><a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/requisito/add/" ><i class="zmdi zmdi-plus-circle"></i> Exp. Específica</a></li>
+			</ul>
+		</div>
+	</div>
+</div>

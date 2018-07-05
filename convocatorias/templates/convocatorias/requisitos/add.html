@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}}
+						</div>
+					{% endfor %}
+				{% endif %}
+				<form method="POST" class="form-horizontal" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.descripcion.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.descripcion}}
+									<span class="text-red" >{{form.descripcion.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							{% if form.instance.uuid %}
+								<a class="btn btn-danger btn-round" href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/requisito/add/">cancelar</a>
+							{% endif %}
+						</div>
+					</div>
+				</form>
+				<div class="card-body p-0 border-top">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Descripción</th>
+									<th>Opción</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for requisito in convocatoria_puesto.requisitos.all|dictsortreversed:'fecha_creacion' %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{requisito.descripcion}}</td>
+										<td>
+											<a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/requisito/edit/{{requisito.uuid}}/" class="btn btn-success btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+											</a>
+											<a href="/convocatorias/puesto/{{convocatoria_puesto.uuid}}/requisito/delete/{{requisito.uuid}}/" class="btn btn-danger btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

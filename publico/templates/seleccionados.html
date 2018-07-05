@@ -1,0 +1,32 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="team">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>{{title}}</h3>
+				</div>
+				{% for seleccionado in seleccionados %}
+					{% for puesto_seleccionado in convocatoria_puestos_seleccionados %}
+						{% if seleccionado.postulacion__convocatoria_puesto == puesto_seleccionado.uuid %}
+							<div class="col-sm-4">
+								<div class="card">
+									<a href="/publico/convocatoria/puesto/{{puesto_seleccionado.uuid}}/{{seleccionado.fecha|date:"Y-m-d"}}/seleccionados/">
+										<img class="card-img-top" src="http://orc.com.pe/wp-content/uploads/2015/07/banner2-400x260.jpg" alt="Card image cap">
+									</a>
+									<div class="card-body">
+										<a href="/publico/convocatoria/puesto/{{puesto_seleccionado.uuid}}/{{seleccionado.fecha|date:"Y-m-d"}}/seleccionados/" class="btn-link" >
+											<h4>({{puesto_seleccionado.cantidad_vacantes}}) {{puesto_seleccionado.rango.descripcion}} {{puesto_seleccionado.especialidad.descripcion}}</h4>
+										</a>
+										<p class="card-text" > <strong>({{seleccionado.total}}) seleccionados </strong> hasta el {% if seleccionado.fecha %} {{seleccionado.fecha|date:'d'}} de {{seleccionado.fecha|date:'F Y'}} {% endif %}</p>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endblock content %}

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+ 	<div class="row">
+		{% include "convocatorias/title_convocatoria.html" with convocatoria=convocatoria %}
+		{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+	</div>
+	<div class="row">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+		{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+	</div>
+	<div class="row">
+		{% if messages %}
+			{% for message in messages %}
+				<div class="alert alert-{{message.tags}}" role="alert">
+					{{message}}
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	<a class="btn btn-flat btn-success" href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/criterios_busqueda/">
+		<span><i class="zmdi zmdi-search"></i></span> Criterios de Busqueda
+	</a>
+	<div class="row">
+		<!-- modal-dialog detail -->
+		<div class="modal fade in" id="modal__view_detail" tabindex="-1" role="dialog" aria-labelledby="modal__view_detail">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel-2">Informacion</h4>
+						<ul class="card-actions icons right-top">
+							<li>
+								<a href="javascript:void(0)" data-dismiss="modal" class="text-white" aria-label="Close">
+									<i class="zmdi zmdi-close"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div id="modal-body" class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- modal-dialog detail -->
+		<div class="col-sm-2">
+			<h3>Resultados</h3>
+		</div>
+		<div class="col-sm-3">
+			<select name="" id="select__ejecutar" class="normal__select" >
+				<option value="preseleccionar">Pasar a preseleccionados</option>
+				<!-- <option value="add_tag_masivo">Añadir etiqueta masiva</option> -->
+			</select>
+		</div>
+		<div class="col-sm-2">
+			<button id="button__ejecutar" class="btn btn-round btn-success" data-convocatoria="{{convocatoria_puesto.uuid}}" >Ejecutar</button>
+		</div>
+		<div id="message__ejecutar" class="col-sm-4"></div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="card card-data-tables product-table-wrapper">
+				<div class="card-body p-0">
+					<h1>POSTULADOS</h1>
+					{% if personas_postulaciones %}
+						{% include "personas/table_personas.html" with postulaciones=personas_postulaciones id_table='table-pre-seleccion-personas' %}
+					{% else %}
+						<p>No hay personas</p>
+					{% endif %}
+					<h1>BASE DE DATOS</h1>
+					{% if personas_aptas %}
+						{% include "personas/table_personas.html" with postulaciones=personas_aptas id_table='table-pre-seleccion-bd' %}
+					{% else %}
+						<p>No hay personas</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+

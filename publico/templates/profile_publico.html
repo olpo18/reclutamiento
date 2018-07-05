@@ -1,0 +1,162 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="about">
+		<div class="container">
+			{% if not user.persona.verificado %}
+				<div class="alert alert-danger" role="alert" >Para completar tu registro, acércate a recepción OIPC con tus documentos originales.</div>
+			{% endif %}
+			<div class="row">
+				{% if user.is_authenticated %}
+					<div class="col-md-12">
+						<h3>Mi perfil</h3>
+					</div>
+					<div class="col-sm-12">
+						{% if not user.persona %}
+							<h4>no tienes una persona asociada</h4>
+						{% else %}
+							<div class="row">
+								<div class="col-sm-10">
+									<h4 class="text-uppercase" >datos personales</h4>
+								</div>
+								<div class="col-sm-2">
+									<a class="btn btn-link text-uppercase" href="/publico/editar/perfil/"><i class="fa fa-pencil" aria-hidden="true"></i>editar</a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Nombres</strong></label></div>
+										<div class="col-sm-12">{{user.persona.nombres|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Apellidos</strong></label></div>
+										<div class="col-sm-12">{{user.persona.apellidos|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Genero</strong></label></div>
+										<div class="col-sm-12">{{user.persona.get_genero_display|upper}}</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>{{user.persona.tipo_documento.descripcion|upper}}</strong></label></div>
+										<div class="col-sm-12">{{user.persona.numero_documento}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Nacionalidad</strong></label></div>
+										<div class="col-sm-12">{{user.persona.nacionalidad|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Email</strong></label></div>
+										<div class="col-sm-12">{{user.persona.email}}</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Nacimiento</strong></label></div>
+										<div class="col-sm-12">{{user.persona.distrito_nacimiento.descripcion|upper}} - {{user.persona.provincia_nacimiento.descripcion|upper}} - {{user.persona.departamento_nacimiento.descripcion|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Residencia</strong></label></div>
+										<div class="col-sm-12">{{user.persona.distrito_residencia.descripcion|upper}} - {{user.persona.provincia_residencia.descripcion|upper}} - {{user.persona.departamento_residencia.descripcion|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Tiempo</strong></label></div>
+										<div class="col-sm-12">{% if user.persona.tiempo_residencia %} {{user.persona.tiempo_residencia}} {{user.persona.get_tipo_tiempo_residencia_display}} {% else %} -- {% endif %}</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>direccion</strong></label></div>
+										<div class="col-sm-12">{{user.persona.direccion|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Nº licencia</strong></label></div>
+										<div class="col-sm-12">{{user.persona.numero_licencia_conducir}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<input id="fecha_nacimiento" type="hidden" name="fecha_nacimiento" >
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Fecha Nacimiento</strong></label></div>
+										<div class="col-sm-12">{{user.persona.fecha_nacimiento|date:'j'}} de {{user.persona.fecha_nacimiento|date:'F'}} del {{user.persona.fecha_nacimiento|date:'Y'}}</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Teléfono</strong></label></div>
+										<div class="col-sm-12">{{user.persona.telefono_fijo}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Celular</strong></label></div>
+										<div class="col-sm-12">{{user.persona.celular}} {% if user.persona.celular_dos %} {{user.persona.celular_dos}} {% endif %}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Ingles</strong></label></div>
+										<div class="col-sm-12">{{user.persona.ingles|default:''}}</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Estado civil</strong></label></div>
+										<div class="col-sm-12">{{user.persona.get_estado_civil_display|upper}}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty">
+										<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Discapacitado</strong></label></div>
+										<div class="col-sm-12">{% if user.persona.discapacitado %} SI, {{user.persona.tipo_discapacidad.descripcion|upper}} {% else %} NO {% endif %}</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="col-sm-12"><label class="control-label text-capitalize"><strong>Foto</strong></label></div>
+									<div class="col-sm-12">
+										{% if user.persona.imagen %}
+											<label for="">FOTO ACTUAL</label>
+											<img src="{{user.persona.imagen.url}}" width="50px" height="50px" alt="" class="img-thumbnail">
+										{% else %}
+											<span>No ha subido foto.</span>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					</div>
+				{% else %}
+					<div class="col-md-12">
+						<h4 class="text-uppercase" >inicia sesión ó <a href="/publico/registrarse/" class="btn btn-success" >registrate</a></h4>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</section>	
+{% endblock content %}

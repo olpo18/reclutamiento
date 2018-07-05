@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>Convocatoria : {{convocatoria_puesto.convocatoria.nombre}}</h1>
+		</div>
+		{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+	</div>
+	<div class="row">
+		<div class="col-sm-9">
+			<h1>Puesto: {{convocatoria_puesto.rango.descripcion|lower}} {{convocatoria_puesto.sub_especialidad.descripcion|lower}} / {{convocatoria_puesto.familia_puesto.descripcion|lower}} {{convocatoria_puesto.especialidad.descripcion|lower}}</h1>
+		</div>
+		<div class="col-sm-3">
+			{% include "convocatorias/acciones_puesto.html" %}
+		</div>
+		{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+	</div>
+	<div id="criterios_de_busqueda_step_1" class="row">
+		<div class="card">
+			<div class="card-body">
+				<h1 class="text-center text-uppercase" ><strong>Académico</strong></h1>
+				{% for academico in convocatoria_puesto.peq_int_convocatoria_academico_set.all %}
+					{% if academico.get_tipo_registro_display != 'criterio' %}
+						<div class="row">
+							<div class="col-sm-8 border-bottom">
+								<h5 class="m-t-10" >{{academico.familia_carrera.descripcion|upper}} {{academico.carrera.descripcion|upper}} {{academico.grado.descripcion|upper}} {{academico.estado_grado.descripcion|upper}}</h5>
+							</div>
+							<div class="col-sm-4">
+								<div class="col-sm-6">
+									<div class="form-group m-0 p-0">
+										<input type="number" value="{{academico.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{academico.pk}}" data-tipo="academico" placeholder="% de cumplimiento">
+									</div>
+								</div>
+								<div class="col-sm-6 m-t-10">
+									<div class="message_porcentaje_cumplimiento"></div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+				<h1 class="text-center text-uppercase" ><strong>experiencia</strong></h1>
+				{% for experiencia in convocatoria_puesto.peq_int_convocatoria_experiencia_set.all %}
+					{% if experiencia.get_tipo_registro_display != 'criterio' %}
+						<div class="row">
+							<div class="col-sm-8 border-bottom">
+								<h5 class="m-t-10" >{{experiencia.rango.descripcion|upper}} {{experiencia.sub_especialidad.descripcion|upper}} {{experiencia.familia_puesto.descripcion|upper}} {{experiencia.especialidad.descripcion|upper}}</h5>
+							</div>
+							<div class="col-sm-4">
+								<div class="col-sm-6">
+									<div class="form-group m-0 p-0">
+										<input type="number" value="{{experiencia.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{experiencia.pk}}" data-tipo="experiencia" placeholder="% de cumplimiento">
+									</div>
+								</div>
+								<div class="col-sm-6 m-t-10">
+									<div class="message_porcentaje_cumplimiento"></div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+				<h1 class="text-center text-uppercase" ><strong>Estudios Complementarios</strong></h1>
+				{% for curso in convocatoria_puesto.peq_int_convocatoria_cursos_set.all %}
+					<div class="row">
+						<div class="col-sm-8 border-bottom">
+							<h5 class="m-t-10" >{{curso.tipo.descripcion|upper}} {{curso.descripcion|upper}}</h5>
+						</div>
+						<div class="col-sm-4">
+							<div class="col-sm-6">
+								<div class="form-group m-0 p-0">
+									<input type="number" value="{{curso.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{curso.pk}}" data-tipo="curso" placeholder="% de cumplimiento">
+								</div>
+							</div>
+							<div class="col-sm-6 m-t-10">
+								<div class="message_porcentaje_cumplimiento"></div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="row">
+					<div class="col-sm-8 text-right">
+						<h5 class="m-t-10 text-uppercase" ><strong>total</strong></h5>
+					</div>
+					<div class="col-sm-2 text-center">
+						<h5 id="total_cumplimiento_normal" class="m-t-10 text-uppercase" ></h5>
+					</div>
+				</div>
+				<div class="row text-center">
+					<div id="message_siguiente_cumplimiento_normal" class="col-sm-12"></div>
+					<div class="col-sm-12">
+						<button id="btn_siguiente_cumplimiento_normal" data-url="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/criterios_busqueda_avanzada/" type="button" class="btn btn-info btn-round" >siguiente</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

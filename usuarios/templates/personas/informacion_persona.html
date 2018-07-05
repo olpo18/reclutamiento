@@ -1,0 +1,142 @@
+<div class="row">
+	<div class="col-sm-2">
+		<div class="btn-group">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Acciones <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				{% if perms.usuarios.change_persona %}
+					<li><a href="/personas/{{persona.uuid}}/editar/" ><i class="zmdi zmdi-edit"></i> EDITAR</a></li>
+				{% endif %}
+				<li><a target="_blank" href="/personas/{{persona.uuid}}/pdf/" ><i class="zmdi zmdi-eye"></i> VER PDF</a></li>
+				<li><a target="_blank" href="/personas/{{persona.uuid}}/postulaciones/" ><i class="zmdi zmdi-assignment-check"></i> POSTULACIONES</a></li>
+				<li><a target="_blank" href="/educativo/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> EDUCACIÓN</a></li>
+				<li><a target="_blank" href="/laboral/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> LABORAL</a></li>
+				<li><a target="_blank" href="/cursos/persona/{{persona.uuid}}/add/" ><i class="zmdi zmdi-plus-circle"></i> ESTUDIOS COMPLEMENTARIOS</a></li>
+				<li><a target="_blank" href="/persona/{{persona.uuid}}/documentos/add/" ><i class="zmdi zmdi-plus-circle"></i> DOCUMENTOS</a></li>
+			</ul>
+		</div>
+	</div>
+	{% if perms.usuarios.verificar_persona %}
+		<div class="col-sm-2">
+			{% if persona.verificado %}
+				<h3 class="text-success text-uppercase" ><strong><i class="zmdi zmdi-check-circle"></i> verificado</strong></h3>
+			{% else %}
+				<h3 class="text-danger text-uppercase" ><strong><i class="zmdi zmdi-block"></i> no verificado</strong></h3>
+			{% endif %}
+		</div>
+	{% endif %}
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >Tipo Doc.:</strong></div>
+			<div class="col-sm-8">{{persona.tipo_documento.descripcion|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >Número Doc.</strong></div>
+			<div class="col-sm-8">{{persona.numero_documento|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >email:</strong></div>
+			<div class="col-sm-8">{{persona.email|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >fecha nac.:</strong></div>
+			<div class="col-sm-8">{% if persona.fecha_nacimiento %} {{persona.fecha_nacimiento|date:'d'}} de {{persona.fecha_nacimiento|date:'F Y'}} {% endif %}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >celular:</strong></div>
+			<div class="col-sm-8">{{persona.celular}} - {{persona.celular_dos|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >telefono:</strong></div>
+			<div class="col-sm-8">{{persona.telefono_fijo|default:''}}</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >nacionalidad:</strong></div>
+			<div class="col-sm-8">{{persona.nacionalidad|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >dirección:</strong></div>
+			<div class="col-sm-8">{{persona.direccion|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >Nacimiento:</strong></div>
+			<div class="col-sm-8">{{persona.distrito_nacimiento.descripcion|default:''}} {{persona.provincia_nacimiento.descripcion|default:''}} {{persona.departamento_nacimiento.descripcion|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >residencia:</strong></div>
+			<div class="col-sm-8">{{persona.distrito_residencia.descripcion|default:''}} {{persona.provincia_residencia.descripcion|default:''}} {{persona.departamento_residencia.descripcion|default:''}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >Discapacidad:</strong></div>
+			<div class="col-sm-8">
+				{% if postulante_convocatoria.persona.discapacitado %}
+					SI
+					{% if postulante_convocatoria.persona.tipo_discapacidad %} 
+						, {{persona.tipo_discapacidad.descripcion}} 
+					{% else %} 
+						S/D 
+					{% endif %}
+				{% else %}
+					NO
+				{% endif %}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4"><strong class="text-uppercase" >nº licencia:</strong></div>
+			<div class="col-sm-8">{{persona.numero_licencia_conducir|default:''}}</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="col-sm-12">
+			<h2 class="alert alert-info" >Académico</h2>
+		</div>
+		<div class="list-group">
+			{% for educacion in persona.informacioneducativa_set.all|dictsort:"fecha_inicio" %}
+				<li class="list-group-item">
+					<div class="col-sm-12">
+						<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+						<div class="list-group-item-body">
+							<div class="list-group-item-heading">
+								{% if educacion.centro_estudio %} {{educacion.centro_estudio.descripcion}} {% else %} {{educacion.nombre}} {% endif %}
+							</div>
+							<div class="list-group-item-text">
+								<div>{{educacion.grado.descripcion}} {{educacion.familia_grado.descripcion}}</div>
+								<div>{% if educacion.hasta_actualidad %} {{educacion.fecha_inicio|timesince:educacion.fecha_fin}} {% else %} {{educacion.fecha_inicio|timesince}} {% endif %} </div>
+							</div>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="col-sm-12">
+			<h2 class="alert alert-info" >Experiencia</h2>
+		</div>
+		<div class="list-group">
+			{% for experiencia in persona.informacionlaboral_set.all|dictsort:"fecha_inicio" %}
+				<li class="list-group-item">
+					<div class="col-sm-12">
+						<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+						<div class="list-group-item-body">
+							<div class="list-group-item-heading">
+								{{experiencia.empresa.descripcion}}
+							</div>
+							<div class="list-group-item-text">
+								<div>{{experiencia.puesto.descripcion}} / {{experiencia.familia_puesto.descripcion}}</div>
+								<div>{{experiencia.fecha_inicio|timesince:experiencia.fecha_fin}}</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			{% endfor %}
+		</div>
+	</div>
+</div>

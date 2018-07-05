@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'personas/title_persona.html' %}
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}}
+						</div>
+					{% endfor %}
+				{% endif %}
+				<form method="POST" id="form-educativo" class="form-horizontal" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Nivel de Estudios</label></div>
+								<div class="col-sm-12">
+									{{form.grado}}
+									<span class="text-red" >{{form.grado.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.centro_estudio.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.centro_estudio}}
+									<span class="text-red" >{{form.centro_estudio.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3" id="nombre-centro-otros" style="display: none;">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.nombre.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.nombre}}
+									<span class="text-red" >{{form.nombre.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.estado_grado.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.estado_grado}}
+									<span class="text-red" >{{form.estado_grado.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div id="familia_carrera" class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.familia_carrera.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.familia_carrera}}
+									<span class="text-red" >{{form.familia_carrera.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div id="carrera" class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.carrera.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.carrera}}
+									<span class="text-red" >{{form.carrera.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_inicio.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.fecha_inicio}}
+									<span class="text-red" >{{form.fecha_inicio.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_fin.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.fecha_fin}}
+									<span class="text-red" >{{form.fecha_fin.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-2">
+									{{form.hasta_actualidad}}
+								</div>
+								<div class="col-sm-10"><label for="{{form.hasta_actualidad.id_for_label}}" class="control-label">{{form.hasta_actualidad.label}}</label></div>
+								<div class="col-sm-12">
+									<span class="text-red" >{{form.hasta_actualidad.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							{% if form.instance.id %}
+								<a class="btn btn-round btn-danger" href="/educativo/persona/{{persona.uuid}}/add/">cancelar</a>
+							{% endif %}
+						</div>
+					</div>
+				</form>
+				<div class="card-body p-0 border-top">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nivel de estudio</th>
+									<th>Estado</th>
+									<th>Centro de estudio</th>
+									<th>Carrera</th>
+									<th>Tiempo</th>
+									<th>Opción</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for educativo in persona.informacioneducativa_set.all|dictsortreversed:'fecha_inicio' %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{educativo.grado.descripcion}}</td>
+										<td>{{educativo.estado_grado.descripcion}}</td>
+										<td>{{educativo.centro_estudio.descripcion}}</td>
+										<td>{% if educativo.carrera %} {{educativo.carrera.descripcion}} {% endif %}</td>
+										<td>{{educativo.fecha_inicio|timesince:educativo.fecha_fin}}</td>
+										<td>
+											<a href="/educativo/persona/{{persona.uuid}}/edit/{{educativo.pk}}/" class="btn btn-success btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+											</a>
+											<a href="/educativo/persona/{{persona.uuid}}/delete/{{educativo.pk}}/" class="btn btn-danger btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{ form.media }}
+{% endblock extra-js %}

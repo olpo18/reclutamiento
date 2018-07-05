@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'personas/title_persona.html' %}
+	</div>
+	<div class="row bg-white">
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Nivel de estudios</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.grado.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Estado</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.estado_grado.descripcion}}</span></div>
+		</div>
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Centro Estudio</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.centro_estudio.descripcion}}</span></div>
+		</div>
+		{% if informacioneducativa.carrera %}
+			<div class="col-sm-4">
+				<div class="col-sm-12">
+					<label for=""><strong>Carrera</strong></label>
+				</div>
+				<div class="col-sm-12"><span>{{informacioneducativa.carrera.descripcion}}</span></div>
+			</div>
+		{% endif %}
+		<div class="col-sm-4">
+			<div class="col-sm-12">
+				<label for=""><strong>Tiempo</strong></label>
+			</div>
+			<div class="col-sm-12"><span>{{informacioneducativa.fecha_inicio|timesince:informacioneducativa.fecha_fin}}</span></div>
+		</div>
+	</div>
+	<div class="row bg-white">
+		<form method="POST" class="form-horizontal" action="" >
+			{% csrf_token %}
+			<div class="row text-center">
+				<div class="col-sm-12">
+					<h5 class="text-uppercase" ><strong>deseas eliminar el registro ?</strong></h5>
+				</div>
+				<div class="col-sm-12">
+					<button type="submit" class="btn btn-round btn-success" >si</button>
+					<a href="/educativo/persona/{{persona.uuid}}/add/" class="btn btn-round btn-danger" >no</a>
+				</div>
+			</div>
+		</form>
+	</div>
+{% endblock %}

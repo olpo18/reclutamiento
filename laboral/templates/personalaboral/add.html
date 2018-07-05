@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'personas/title_persona.html' %}
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}}
+						</div>
+					{% endfor %}
+				{% endif %}
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="form-group is-empty">
+							<div class="col-sm-12">
+								<input type="text" id="autocomplete_puesto" name="autocomplete_puesto" class="form-control" placeholder="Ingresar nombre del puesto">
+							</div>
+						</div>
+						<div id="result__autocomplete" class="row m-b-20 m-t-10" ></div>
+					</div>
+				</div>
+				<form method="POST" id="form-laboral" class="form-horizontal" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">Nombre de empresa</label></div>
+								<div class="col-sm-12">
+									{{form.empresa}}
+									<span class="text-red" >{{form.empresa.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3" id="nombre-centro-otros" style="display: none;">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.nombre.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.nombre}}
+									<span class="text-red" >{{form.nombre.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.rango.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.rango}}
+									<span class="text-red" >{{form.rango.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.familia_puesto.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.familia_puesto}}
+									<span class="text-red" >{{form.familia_puesto.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.especialidad.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.especialidad}}
+									<span class="text-red" >{{form.especialidad.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.sub_especialidad.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.sub_especialidad}}
+									<span class="text-red" >{{form.sub_especialidad.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_inicio.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.fecha_inicio}}
+									<span class="text-red" >{{form.fecha_inicio.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.fecha_fin.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.fecha_fin}}
+									<span class="text-red" >{{form.fecha_fin.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-2">
+									{{form.hasta_actualidad}}
+								</div>
+								<div class="col-sm-10"><label for="{{form.hasta_actualidad.id_for_label}}" class="control-label">{{form.hasta_actualidad.label}}</label></div>
+								<div class="col-sm-12">
+									<span class="text-red" >{{form.hasta_actualidad.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							{% if form.instance.id %}
+								<a class="btn btn-round btn-danger" href="/laboral/persona/{{persona.uuid}}/add/">cancelar</a>
+							{% endif %}
+						</div>
+					</div>
+				</form>
+				<div class="card-body p-0 border-top">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Empresa</th>
+									<th>Rango</th>
+									<th>Familia Puesto</th>
+									<th>Especialidad</th>
+									<th>SubEspecialidad</th>
+									<th>Tiempo</th>
+									<th>Opción</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for laboral in persona.informacionlaboral_set.all|dictsortreversed:'fecha_inicio' %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{laboral.empresa.descripcion}}</td>
+										<td>{{laboral.rango.descripcion}}</td>
+										<td>{{laboral.familia_puesto.descripcion}}</td>
+										<td>{% if laboral.especialidad %} {{laboral.especialidad.descripcion}} {% endif %}</td>
+										<td>{% if laboral.sub_especialidad %} {{laboral.sub_especialidad.descripcion}} {% endif %}</td>
+										<td>{{laboral.fecha_inicio|timesince:laboral.fecha_fin}}</td>
+										<td>
+											<a href="/laboral/persona/{{persona.uuid}}/edit/{{laboral.pk}}/" class="btn btn-success btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+											</a>
+											<a href="/laboral/persona/{{persona.uuid}}/delete/{{laboral.pk}}/" class="btn btn-danger btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block extra-js %}
+	{{form.media}}
+{% endblock extra-js %}

@@ -1,0 +1,43 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="about">
+		<div class="container">
+			<div class="row justify-content-md-center">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title text-center text-uppercase">ingresar</h5>
+						<form method="POST" class="form-horizontal" action="" >
+							{% csrf_token %}
+							<div class="col-sm-12">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Usuario</label></div>
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="username" placeholder="numero de documento" required="" >
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Contraseña</label></div>
+									<div class="col-sm-12">
+										<input type="password" class="form-control" name="password" placeholder="ingresar contraseña" required="" >
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="form-group text-center col-sm-12">
+									<button type="submit" class="btn btn-primary btn-round text-uppercase">entrar</button>
+								</div>
+							</div>
+						</form>
+						{% if message.value %}
+							<div class="alert alert-{{message.class}}" role="alert">{{message.value}}</div>
+						{% endif %}
+						<span>olvidaste tu contraseña? </span><a class="btn btn-link" target="_blank" href="/password_reset/">recuperar contraseña</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>	
+{% endblock content %}

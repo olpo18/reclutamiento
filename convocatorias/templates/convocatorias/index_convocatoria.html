@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<form action="" method="GET" class="form-horizontal" >
+			<div class="form-group is-empty m-t-5">
+				<label for="name_codigo" class="col-sm-2 control-label">Buscar</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="name_codigo" name="name_codigo" placeholder="Ingresar nombre o código de la convocatoria">
+				</div>
+				<div class="col-sm-4">
+					<button type="submit" class="btn btn-info btn-round m-t-0">buscar</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	{% include "messages.html" %}
+	<div class="row">
+		{% if data %}
+			<!-- modal-dialog -->
+			<div class="modal fade in" id="basic_modal" tabindex="-1" role="dialog" aria-labelledby="basic_modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title" id="myModalLabel-2">Iniciar convocatoria</h4>
+							<ul class="card-actions icons right-top">
+								<li>
+									<a href="javascript:void(0)" data-dismiss="modal" class="text-white" aria-label="Close">
+										<i class="zmdi zmdi-close"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="modal-body">
+							<form id="form-iniciar-convocatoria" class="form-horizontal col-sm-offset-3" method="POST" action="" >
+								{% csrf_token %}
+								<input type="hidden" id="uuid-convocatoria-iniciar" name="uuid-convocatoria-iniciar" >
+								<div class="form-group is-empty">
+									<label for="fecha_inicio" class="control-label col-sm-3">Fecha Inicio</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control datepicker" name="fecha_inicio" id="fecha_inicio" type="date" autocomplete="off" required >
+									</div>
+								</div>
+								<div class="form-group is-empty">
+									<label for="fecha_fin" class="control-label col-sm-3">Fecha Fin</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control datepicker" name="fecha_fin" id="fecha_fin" type="date" autocomplete="off" required >
+									</div>
+								</div>
+								<div class="form-group is-empty">
+									<label for="fecha_inicio_two" class="control-label col-sm-3">Fecha Comite</label>
+									<div class="col-sm-6">
+										<input type="text" class="form-control datepicker" name="fecha_comite" id="fecha_inicio_two" type="date" autocomplete="off" required >
+									</div>
+								</div>
+								<div id="message-form-iniciar"></div>
+								<div class="form-group">
+									<button type="button" class="btn btn-red btn-flat" data-dismiss="modal">Cancelar</button>
+									<button type="submit" class="btn btn-info btn-round">guardar</button>
+								</div>
+							</form>
+						</div>
+						<!-- <div class="modal-footer">
+							<button type="button" class="btn btn-default btn-flat" data-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-primary">Ok</button>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<!-- modal-dialog -->
+			<div class="panel-group expansion" id="popout" role="tablist" aria-multiselectable="true">
+				{% for item in data %}
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading{{item.convocatoria.uuid}}">
+							<h4 class="panel-title">
+								<a {% if not forloop.first %} class="collapsed" {% endif %} role="button" data-toggle="collapse" data-parent="#popout" href="#popout{{item.convocatoria.uuid}}" aria-expanded="true" aria-controls="popout{{item.convocatoria.uuid}}"> <strong>Nombre: </strong> {{item.convocatoria.nombre|upper}} <strong>Código: </strong>{{item.convocatoria.codigo|upper}}</a>
+							</h4>
+						</div>
+						<div id="popout{{item.convocatoria.uuid}}" class="panel-collapse collapse {% if forloop.first %} in {% endif %}" role="tabpanel" aria-labelledby="popout{{item.convocatoria.uuid}}">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-2">
+										<div class="btn-group">
+											<button type="button" class="btn btn-info  btn-flat dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												elegir <span class="caret"></span><div class="ripple-container"></div>
+											</button>
+											<ul class="dropdown-menu">
+												<li><a href="/convocatorias/{{item.convocatoria.uuid}}/puestos/"><i class="zmdi zmdi-plus-circle"></i> Puestos</a></li>
+												<li><a href="/convocatorias/{{item.convocatoria.uuid}}/editar/" > <i class="zmdi zmdi-edit"></i> Editar</a></li>
+												<li><a href="/convocatorias/{{item.convocatoria.uuid}}/eliminar/" > <i class="zmdi zmdi-delete"></i> Eliminar</a></li>
+												<li><a target="_blank" href="/convocatorias/{{item.convocatoria.uuid}}/pdf/"><i class="zmdi zmdi-assignment"></i> PDF</a></li>
+												<!-- <li role="separator" class="divider"></li>
+												<li><a href="#">Separated link</a></li> -->
+											</ul>
+										</div>
+									</div>
+									{% if item.estado_actual.estado.descripcion|lower == 'autorizada' %}
+										{% if perms.convocatorias.iniciar_convocatoria %}
+											<div class="col-sm-5">
+												<button id="{{item.convocatoria.uuid}}" class="btn btn-primary btn-round iniciar_convocatoria" data-toggle="modal" data-uuid="{{item.convocatoria.uuid}}" data-target="#basic_modal">Iniciar</button>
+											</div>
+										{% endif %}
+									{% elif item.estado_actual.estado.descripcion|lower == 'en proceso' %}
+										<div class="col-sm-5">
+											<label>Estado:</label><span class="text-green" > {{item.estado_actual.estado.descripcion|upper}}</span>
+										</div>
+									{% else %}
+										{% if perms.convocatorias.autorizar_convocatoria %}
+											<div class="col-sm-5">
+												<button class="btn btn-info btn-round autorizar_convocatoria" data-uuid="{{item.convocatoria.uuid}}" >autorizar</button>
+											</div>
+										{% endif %}
+									{% endif %}
+								</div>
+								<div class="row">
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Estado</th>
+													<th>Inicio</th>
+													<th>Fin</th>
+													<th>Fecha creacion</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for estado_convocatoria in item.estados %}
+													<tr>
+														<th scope="row">{{forloop.counter}}</th>
+														<td>{{estado_convocatoria.estado.descripcion}}</td>
+														<td>{{estado_convocatoria.fecha_inicio|default:''}}</td>
+														<td>{{estado_convocatoria.fecha_fin|default:''}}</td>
+														<td>{{estado_convocatoria.fecha_creacion|default:''}}</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >Código:</strong></div>
+											<div class="col-sm-8">{{item.convocatoria.codigo}}</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >contratista:</strong></div>
+											<div class="col-sm-8">{{item.convocatoria.contratista.nombre}}</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >Lugar:</strong></div>
+											<div class="col-sm-8">{{item.convocatoria.lugar.descripcion}}</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >inicio:</strong></div>
+											<div class="col-sm-8">{% if item.convocatoria.fecha_inicio %} {{item.convocatoria.fecha_inicio|date:'d'}} de {{item.convocatoria.fecha_inicio|date:'F Y'}} {% endif %}</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >fin:</strong></div>
+											<div class="col-sm-8">{% if item.convocatoria.fecha_fin %} {{item.convocatoria.fecha_fin|date:'d'}} de {{item.convocatoria.fecha_fin|date:'F Y'}} {% endif %}</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"><strong class="text-uppercase" >remuneracion:</strong></div>
+											<div class="col-sm-8">{{item.convocatoria.remuneracion.descripcion}}</div>
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="col-sm-12"><strong class="text-uppercase" >Condiciones Adicionales:</strong></div>
+										<div class="col-sm-12"><p>{{item.convocatoria.condiciones_adicionales}}</p></div>
+									</div>
+								</div>
+								<div class="row border-top border-bottom">
+									<div class="col-sm-3">
+										<ul class="nav nav-pills nav-stacked nav-pills-info" role="tablist">
+											{% for convocatoria_puesto in item.convocatoria.convocatoriapuesto_set.all %}
+												<li {% if forloop.first %} class="active" {% endif %} >
+													<a href="#pillnav-{{convocatoria_puesto.uuid}}" role="tab" data-toggle="tab">
+														{{convocatoria_puesto.rango.descripcion|upper}} {{convocatoria_puesto.sub_especialidad.descripcion|upper}}
+													</a>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="col-sm-9" style="border-left: 1px solid rgba(215,225,237,.6)!important;">
+										<div id="pillContent3" class="tab-content m-t-15">
+											{% for convocatoria_puesto in item.convocatoria.convocatoriapuesto_set.all %}
+												<div class="tab-pane fade {% if forloop.first %} active in {% endif %}" id="pillnav-{{convocatoria_puesto.uuid}}">
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="row">
+																<div class="col-sm-6"><strong class="text-uppercase" >Duración Contrato:</strong></div>
+																<div class="col-sm-6">{{convocatoria_puesto.duracion_contrato.descripcion}}</div>
+															</div>
+															<div class="row">
+																<div class="col-sm-6"><strong class="text-uppercase" >cantidad vacantes:</strong></div>
+																<div class="col-sm-6">{{convocatoria_puesto.cantidad_vacantes}}</div>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<label>Requisitos:</label>
+															<ul>
+																{% for requisito in convocatoria_puesto.requisitos.all %}
+																	<li>{{requisito.descripcion}}</li>	
+																{% endfor %}
+															</ul>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="col-sm-12">
+																<h2 class="alert alert-info" >Académico</h2>
+															</div>
+															<div class="col-sm-12">
+																<ul id="list-cursos" class="list-group">
+																	{% for academico in convocatoria_puesto.peq_int_convocatoria_academico_set.all %}
+																		<li class="list-group-item">
+																			<div class="col-sm-12">
+																				<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+																				<div class="list-group-item-body">
+																					<div class="list-group-item-heading">
+																						{{academico.grado.descripcion|upper}} {{academico.estado_grado.descripcion|upper}} 
+																					</div>
+																					<div class="list-group-item-text">
+																						<p>
+																							{{academico.carrera.descripcion|upper}}
+																						</p>
+																					</div>
+																				</div>
+																			</div>
+																		</li>
+																	{% endfor %}
+																</ul>
+															</div>
+														</div>
+														<div class="col-sm-6">
+															<div class="col-sm-12">
+																<h2 class="alert alert-info" >Experiencia</h2>
+															</div>
+															<div class="col-sm-12">
+																<ul id="list-cursos" class="list-group">
+																	{% for experiencia in convocatoria_puesto.peq_int_convocatoria_experiencia_set.all %}
+																		<li class="list-group-item">
+																			<div class="col-sm-12">
+																				<span class="pull-left"><span class="img-circle max-w-40 m-r-10 " ><i class="zmdi zmdi-assignment"></i></span></span>
+																				<div class="list-group-item-body">
+																					<div class="list-group-item-heading">
+																						{{experiencia.rango.descripcion|upper}} {{experiencia.sub_especialidad.descripcion|upper}} 
+																					</div>
+																					<div class="list-group-item-text">
+																						<p>
+																							{{experiencia.experiencia.tiempo}} {{experiencia.experiencia.get_tipo_display|upper}}
+																						</p>
+																					</div>
+																				</div>
+																			</div>
+																		</li>
+																	{% endfor %}
+																</ul>
+															</div>
+														</div>
+													</div>
+												</div>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% else %}
+			<h1>No hay registros de convocatorias.</h1>
+		{% endif %}
+	</div>
+{% endblock %}
+

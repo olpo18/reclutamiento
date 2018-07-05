@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>{{title}}</title>
+    
+    <!-- Favicon -->
+    <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+    
+    <!-- Stylesheet -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/main.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700|Questrial' rel='stylesheet' type='text/css'>
+    
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+  </head>
+  
+  <body id="page">
+    
+    <!-- NAVIGATION -->
+    <nav class="site-navbar fixed-top navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="/publico/">OIPC<span><!-- . --></span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+        <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbar">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/publico/">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/publico/convocatorias/">Convocatorias</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/publico/seleccionados/">Seleccionados</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/publico/preseleccionados/">Pre Seleccionados</a>
+              </li>
+            {% if not user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/publico/registrarse/">Registrarse</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/publico/login/">Ingresar</a>
+              </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <div class="btn-group">
+                  <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {% if user.persona %} {{user.persona.nombres}} {% else %} {{user.username}} {% endif %}
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/publico/perfil/">Perfil</a>
+                    <a class="dropdown-item" href="/publico/postulaciones/">Mis postulaciones</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+                  </div>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+          
+        </div>
+      </div>
+    </nav>
+    {% block content %}{% endblock content %}
+
+    <!-- FOOTER -->
+    <footer>
+      PEQ Consultores
+    </footer>
+    
+    <!-- Scroll to top -->
+    <div class="scroll-to-top"><a href="#page" class="smooth-scroll"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></div>
+    
+    <!-- Javascript -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/scrollreveal.min.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/publico.js' %}"></script>
+    {% block extra-js %}{% endblock extra-js %}
+  </body>
+  
+</html>

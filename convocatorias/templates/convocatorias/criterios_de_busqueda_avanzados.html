@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div id="criterios_de_busqueda_step_2" class="row" >
+		<div class="card">
+			<div class="card-body">
+				<h1 class="text-uppercase border-bottom" >criterios avanzados</h1>
+				{% if message.value %}
+					<div class="alert alert-{{message.class}}" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+						{{message.value}}
+					</div>
+				{% endif %}
+				<div id="header_criterios" class="row m-t-20">
+					{% if not plantilla %}
+						<div class="col-sm-3">
+							<div class="form-group m-0 p-0">
+								<input id="name_new_plantilla" type="text" class="form-control" placeholder="Nombre de la plantilla">
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<button id="btn_add_plantilla" type="button" class="btn btn-info btn-round m-0" >Guardar plantilla</button>
+						</div>
+						<div class="col-sm-1"></div>
+					{% endif %}
+					{% if total_criterios == 0 %}
+						<div class="col-sm-6">
+							<form class="form-horizontal" action="" method="POST" >
+								{% csrf_token %}
+								<input type="hidden" name="tipo_formulario" value="select_plantilla" >
+								<div class="col-sm-6">
+									<select name="plantilla" class="normal__select" required="">
+										<option value="">seleccionar</option>
+										{% for item in plantillas %}
+											<option value="{{item.uuid}}" {% if plantilla.uuid == item.uuid %} selected {% endif %} >{{item.descripcion}}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="col-sm-4">
+									<button type="submit" class="btn btn-round btn-info m-0" >seleccionar</button>
+								</div>
+							</form>
+						</div>
+					{% endif %}
+				</div>
+				<div class="row">
+					<div class="col-sm-10">
+						<div id="message_name_plantilla" ></div>
+					</div>
+				</div>
+				{% if plantilla %}
+					<form action="" method="POST" >
+						{% csrf_token %}
+						<input type="hidden" name="tipo_formulario" value="usar_plantilla" >
+						<input type="hidden" name="plantilla" value="{{plantilla.uuid}}" >
+						<button type="submit" class="btn btn-round btn-success" >usar plantilla</button>
+					</form>
+					<div id="plantilla_cargada" class="row" >
+						{% if plantilla.academico %}
+							<h1 class="text-uppercase" ><strong>académico</strong></h1>
+							<div class="col-sm-12">
+								{% for academico in plantilla.academico.all %}
+									{% if academico.get_tipo_registro_display == 'criterio' %}
+										<div class="row">
+											<div class="col-sm-8 border-bottom">
+												<h5 class="m-t-10" >{{academico.familia_carrera.descripcion|upper}} {{academico.carrera.descripcion|upper}} {{academico.grado.descripcion|upper}} {{academico.estado_grado.descripcion|upper}}</h5>
+											</div>
+											<div class="col-sm-4">
+												<label>{{academico.porcentaje_cumplimiento}}</label>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						{% endif %}
+						{% if plantilla.experiencia %}
+							<h1 class="text-uppercase" ><strong>laboral</strong></h1>
+							<div class="col-sm-12" >
+								{% for experiencia in plantilla.experiencia.all %}
+									{% if experiencia.get_tipo_registro_display == 'criterio' %}
+										<div class="row">
+											<div class="col-sm-8 border-bottom">
+												<h5 class="m-t-10" >{{experiencia.rango.descripcion|upper}} {{experiencia.sub_especialidad.descripcion|upper}} {{experiencia.familia_puesto.descripcion|upper}} {{experiencia.especialidad.descripcion|upper}}</h5>
+											</div>
+											<div class="col-sm-4">
+												<div class="col-sm-6">
+													<label>{{experiencia.porcentaje_cumplimiento}}</label>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						{% endif %}
+						{% if plantilla.cursos %}
+							<h1 class="text-uppercase" ><strong>estudios complementarios</strong></h1>
+							<div class="col-sm-12" >
+								{% for curso in plantilla.cursos.all %}
+									{% if curso.get_tipo_registro_display == 'criterio' %}
+										<div class="row">
+											<div class="col-sm-8 border-bottom">
+												<h5 class="m-t-10" >{{curso.tipo.descripcion|upper}} {{curso.descripcion|upper}}</h5>
+											</div>
+											<div class="col-sm-4">
+												<div class="col-sm-6">
+													<label>{{curso.porcentaje_cumplimiento}}</label>
+												</div>
+											</div>
+										</div>
+									{% endif %}
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
+				<div id="formularios_criterios" {% if plantilla %} style="display:none;" {% endif %} >
+					<h1 class="text-uppercase" ><strong>académico</strong></h1>
+					<form id="form_criterio_academico" class="form-horizontal" action="" data-url="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/add_extras_criterio_avanzado/" >
+						{% csrf_token %}
+						<input type="hidden" name="tipo_modelo" value="academico">
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_academico.grado.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_academico.grado}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_academico.estado_grado.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_academico.estado_grado}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_academico.familia_carrera.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_academico.familia_carrera}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_academico.carrera.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_academico.carrera}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Cumplimiento</label></div>
+									<div class="col-sm-12">
+										<input type="number" min="0" max="100" class="form-control text-center" placeholder="% de cumplimiento" name="porcentaje_cumplimiento_criterio" required>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" class="btn btn-round btn-success m-t-40" >agregar</button>
+							</div>
+						</div>
+					</form>
+					<div id="message-form-academico-criterio"></div>
+					<div id="list-academico-criterio">
+						{% for academico in convocatoria_puesto.peq_int_convocatoria_academico_set.all %}
+							{% if academico.get_tipo_registro_display == 'criterio' %}
+								<div class="row">
+									<div class="col-sm-8 border-bottom">
+										<h5 class="m-t-10" >{{academico.familia_carrera.descripcion|upper}} {{academico.carrera.descripcion|upper}} {{academico.grado.descripcion|upper}} {{academico.estado_grado.descripcion|upper}}</h5>
+									</div>
+									<div class="col-sm-4">
+										<div class="col-sm-6">
+											<div class="form-group m-0 p-0">
+												<input type="number" value="{{academico.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento_criterio" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{academico.pk}}" data-tipo="academico" placeholder="% de cumplimiento">
+											</div>
+										</div>
+										<div class="col-sm-6 m-t-10">
+											<div class="message_porcentaje_cumplimiento_criterio"></div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+					<div class="row">
+						<div class="col-sm-2">
+							<h1 class="text-uppercase" ><strong>laboral</strong></h1>
+						</div>
+						<div class="col-sm-6">
+							<div class="form-group is-empty">
+								<div class="col-sm-12">
+									<input type="text" id="autocomplete_puesto" name="autocomplete_puesto" class="form-control" placeholder="Ingresar nombre del puesto">
+								</div>
+							</div>
+							<div id="result__autocomplete" class="row m-b-20 m-l-10 m-t-10" ></div>
+						</div>
+					</div>
+					<form id="form_criterio_experiencia" class="form-horizontal" action="" data-url="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/add_extras_criterio_avanzado/" >
+						{% csrf_token %}
+						<input type="hidden" name="tipo_modelo" value="experiencia">
+						<div class="row">
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_experiencia.rango.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_experiencia.rango}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_experiencia.familia_puesto.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_experiencia.familia_puesto}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_experiencia.especialidad.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_experiencia.especialidad}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_experiencia.sub_especialidad.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_experiencia.sub_especialidad}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_experiencia.experiencia.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_experiencia.experiencia}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Cumplimiento</label></div>
+									<div class="col-sm-12">
+										<input type="number" min="0" max="100" class="form-control text-center" placeholder="% de cumplimiento" name="porcentaje_cumplimiento_criterio" required>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<button type="submit" class="btn btn-round btn-success m-t-40" >agregar</button>
+							</div>
+						</div>
+					</form>
+					<div id="message-form-experiencia-criterio"></div>
+					<div id="list-experiencia-criterio">
+						{% for experiencia in convocatoria_puesto.peq_int_convocatoria_experiencia_set.all %}
+							{% if experiencia.get_tipo_registro_display == 'criterio' %}
+								<div class="row">
+									<div class="col-sm-8 border-bottom">
+										<h5 class="m-t-10" >{{experiencia.rango.descripcion|upper}} {{experiencia.sub_especialidad.descripcion|upper}} {{experiencia.familia_puesto.descripcion|upper}} {{experiencia.especialidad.descripcion|upper}}</h5>
+									</div>
+									<div class="col-sm-4">
+										<div class="col-sm-6">
+											<div class="form-group m-0 p-0">
+												<input type="number" value="{{experiencia.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento_criterio" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{experiencia.pk}}" data-tipo="experiencia" placeholder="% de cumplimiento">
+											</div>
+										</div>
+										<div class="col-sm-6 m-t-10">
+											<div class="message_porcentaje_cumplimiento_criterio"></div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+					<h1 class="text-uppercase" ><strong>estudios complementarios</strong></h1>
+					<form id="form_criterio_cursos" class="form-horizontal" action="" data-url="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/add_extras_criterio_avanzado/" >
+						{% csrf_token %}
+						<input type="hidden" name="tipo_modelo" value="cursos">
+						<div class="row">
+							<div class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_curso.tipo.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_curso.tipo}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_curso.nombre.label}}</label></div>
+									<div class="col-sm-12">
+										{{form_curso.nombre}}
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form_curso.descripcion.label}}</label></div>
+									<div class="col-sm-12">
+										<input type="text" class="form-control" name="descripcion" >
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Cumplimiento</label></div>
+									<div class="col-sm-12">
+										<input type="number" min="0" max="100" class="form-control text-center" placeholder="% de cumplimiento" name="porcentaje_cumplimiento_criterio" required>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<button type="submit" class="btn btn-round btn-success m-t-40" >agregar</button>
+							</div>
+						</div>
+					</form>
+					<div id="message-form-cursos-criterio"></div>
+					<div id="list-cursos-criterio">
+						{% for curso in convocatoria_puesto.peq_int_convocatoria_cursos_set.all %}
+							{% if curso.get_tipo_registro_display == 'criterio' %}
+								<div class="row">
+									<div class="col-sm-8 border-bottom">
+										<h5 class="m-t-10" >{{curso.tipo.descripcion|upper}} {{curso.descripcion|upper}}</h5>
+									</div>
+									<div class="col-sm-4">
+										<div class="col-sm-6">
+											<div class="form-group m-0 p-0">
+												<input type="number" value="{{curso.porcentaje_cumplimiento|default:0}}" min="0" max="100" class="form-control text-center porcentaje_cumplimiento_criterio" data-puesto="{{convocatoria_puesto.uuid}}" data-id="{{curso.pk}}" data-tipo="curso" placeholder="% de cumplimiento">
+											</div>
+										</div>
+										<div class="col-sm-6 m-t-10">
+											<div class="message_porcentaje_cumplimiento_criterio"></div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}

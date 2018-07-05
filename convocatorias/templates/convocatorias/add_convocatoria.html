@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}} <a href="/convocatorias/{{convocatoria.uuid}}/puestos/" class="alert-link" >Ir a puestos</a>
+						</div>
+					{% endfor %}
+				{% endif %}
+				{% if form %}
+					<form method="POST" class="form-horizontal" >
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.nombre.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.nombre}}
+										<span class="text-red" >{{form.nombre.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.contratista.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.contratista}}
+										<span class="text-red" >{{form.contratista.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.codigo.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.codigo}}
+										<span class="text-red" >{{form.codigo.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.remuneracion.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.remuneracion}}
+										<span class="text-red" >{{form.remuneracion.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.fecha_inicio.label}}</label></div>
+									<div class="input-group">
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										{{form.fecha_inicio}}
+										<span class="text-red" >{{form.fecha_inicio.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.fecha_fin.label}}</label></div>
+									<div class="input-group">
+										<span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+										{{form.fecha_fin}}
+										<span class="text-red" >{{form.fecha_fin.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.lugar.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.lugar}}
+										<span class="text-red" >{{form.lugar.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.condiciones_adicionales.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.condiciones_adicionales}}
+										<span class="text-red" >{{form.condiciones_adicionales.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group text-center col-sm-12">
+								<button type="submit" class="btn btn-info btn-round">guardar</button>
+								<a href="/convocatorias/" class="btn btn-round btn-danger" >cancelar</a>
+							</div>
+						</div>
+					</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

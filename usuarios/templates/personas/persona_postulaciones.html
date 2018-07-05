@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				<h4> <strong>NOMBRES: </strong> {{persona.nombres|upper}} <strong>APELLIDOS: </strong> {{persona.apellidos|upper}} <strong>Nº DOCUMENTO</strong> {{persona.numero_documento}}</h4>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="panel-group expansion" id="popout" role="tablist" aria-multiselectable="true">
+			{% for postulacion in postulaciones %}
+				<div class="panel panel-default">
+					<div class="panel-heading" role="tab" >
+						<h4 class="panel-title">
+							<a {% if not forloop.first %} class="collapsed" {% endif %} role="button" data-toggle="collapse" data-parent="#popout" href="#{{postulacion.pk}}" aria-expanded="false" aria-controls="{{postulacion.pk}}"> <strong>CONVOCATORIA:</strong> {{postulacion.convocatoria_puesto.convocatoria.nombre}} <strong>-</strong> {{postulacion.convocatoria_puesto.convocatoria.codigo}} <strong>PUESTO:</strong> {{postulacion.convocatoria_puesto.rango.descripcion|upper}} {{postulacion.convocatoria_puesto.especialidad.descripcion|upper}} {{postulacion.convocatoria_puesto.sub_especialidad.descripcion|upper}} {{postulacion.convocatoria_puesto.familia_puesto.descripcion|upper}}</a>
+						</h4>
+					</div>
+					<div id="{{postulacion.pk}}" class="panel-collapse collapse {% if forloop.first %} in {% endif %}" role="tabpanel" aria-labelledby="{{postulacion.pk}}">
+						<div class="panel-body">
+							<div class="table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Estado</th>
+											<th>Fecha</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for estado_postulacion in postulacion.peq_int_estado_postulacion_set.all|dictsort:'estado.orden' %}
+											<tr>
+												<th scope="row">{{forloop.counter}}</th>
+												<td>{{estado_postulacion.estado.alias|upper}}</td>
+												<td>{{estado_postulacion.fecha_creacion}}</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

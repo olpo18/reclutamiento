@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' with back_url=back_url %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		{% if bloqueado.message %}
+			<div class="alert alert-{{bloqueado.class}} text-center" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				{{bloqueado.message}}
+			</div>
+		{% endif %}
+	</div>
+	{% if not bloqueado.value %}
+		<div class="row">
+			<div class="col-sm-9">
+				<form action="" method="GET" class="form-horizontal" >
+					<div class="form-group is-empty m-t-5">
+						<label for="numero_documento" class="col-sm-2 control-label">Buscar</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" id="numero_documento" name="numero_documento" value="{{numero_documento|default:''}}" placeholder="Ingresar número de documento">
+						</div>
+						<div class="col-sm-4">
+							<button type="submit" class="btn btn-info btn-round m-t-0">buscar</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-sm-3">
+				<a href="#" class="btn btn-success btn-flat btn_pase_de_ingreso_add_persona" ><i class="zmdi zmdi-plus-circle"></i> Agregar persona</a>
+			</div>
+		</div>
+		<div id="criterios_aprobacion_step_find_persona" class="row" {% if add_persona %} style="display:none;" {% endif %}>
+			<h1 class="text-center border-bottom m-b-30 p-10" >Registros</h1>
+			{% if registros %}
+				<div class="panel-group expansion" id="popout" role="tablist" aria-multiselectable="true">
+					{% for registro in registros %}
+						<div class="panel panel-default">
+							<div class="panel-heading" role="tab" id="heading{{registro.persona.uuid}}">
+								<h4 class="panel-title">
+									<a {% if not forloop.first %} class="collapsed" {% endif %} role="button" data-toggle="collapse" data-parent="#popout" href="#popout{{registro.persona.uuid}}" aria-expanded="true" aria-controls="popout{{registro.persona.uuid}}"> {% if registro.criterio %} ({{registro.criterio.alias|upper}}) {% endif %} {{registro.persona.nombres|upper}} {{registro.persona.apellidos|upper}} - {{registro.persona.numero_documento}}</a>
+								</h4>
+							</div>
+							<div id="popout{{registro.persona.uuid}}" class="panel-collapse collapse {% if forloop.first %} in {% endif %}" role="tabpanel" aria-labelledby="popout{{registro.persona.uuid}}">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-sm-6">
+											{% if not registro.pase %}
+												<form method="POST" action="">
+													{% csrf_token %}
+													<input type="hidden" name="tipo" value="exist_persona" >
+													<input type="hidden" name="persona" value="{{registro.persona.uuid}}" >
+													<button type="submit" class="btn btn-success btn-round" >dar pase de ingreso</button>
+												</form>
+											{% endif %}
+										</div>
+									</div>
+									{% include "personas/informacion_persona.html" with persona=registro.persona %}
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% else %}
+				<h3 class="text-center border-bottom m-b-30 p-10" >No hay personas registradas</h3>
+			{% endif %}
+		</div>
+		<div id="criterios_aprobacion_step_add_persona" class="row" {% if not add_persona %} style="display:none;" {% endif %}  >
+			<div class="card">
+				<div class="card-body">
+					<form method="POST" class="form-horizontal" action="" >
+						{% csrf_token %}
+						<input type="hidden" name="tipo" value="new_persona" >
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.nombres.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.nombres}}
+										<span class="text-red" >{{form.nombres.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.apellidos.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.apellidos}}
+										<span class="text-red" >{{form.apellidos.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.genero.label}}</label></div>
+									<div class="col-sm-12">
+										{% for genero in form.genero %}
+											<label class="checkbox-inline">
+												{{genero}}
+											</label>
+										{% endfor %}
+										<span class="text-red" >{{form.genero.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.numero_documento.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.numero_documento}}
+										<span class="text-red" >{{form.numero_documento.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.email.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.email}}
+										<span class="text-red" >{{form.email.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">Lugar de nacimiento</label></div>
+									<div class="col-sm-4">
+										{{form.departamento_nacimiento}}
+									</div>
+									<div class="col-sm-4">
+										{{form.provincia_nacimiento}}
+									</div>
+									<div class="col-sm-4">
+										{{form.distrito_nacimiento}}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.nacionalidad.label}}</label></div>
+									<div class="col-sm-12">
+										{{form.nacionalidad}}
+										<span class="text-red" >{{form.nacionalidad.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<div class="col-sm-12"><label class="control-label">{{form.mano_obra.label}}</label></div>
+									<div class="col-sm-12">
+										{% for mano_obra in form.mano_obra %}
+											<label class="checkbox-inline">
+												{{mano_obra}}
+											</label>
+										{% endfor %}
+										<span class="text-red" >{{form.mano_obra.errors}}</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div class="form-group is-empty">
+									<input id="fecha_nacimiento" type="hidden" name="fecha_nacimiento" >
+									<div class="col-sm-12"><label class="control-label">Fecha Nacimiento</label></div>
+									<div class="col-sm-12">
+										{{form.fecha_nacimiento}}
+									</div>
+									<div class="col-sm-12">
+										<span class="text-red" >{{form.fecha_nacimiento.errors}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group text-center col-sm-12">
+								<button type="submit" class="btn btn-info btn-round">continuar</button>
+								<button type="button" class="btn btn-danger btn-round cancelar_pase_de_ingreso_add_persona">cancelar</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

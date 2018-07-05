@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' with back_url=back_url %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if pase_de_ingreso.criterio_aprobacion.alias != 'A1' %}
+					<form method="POST" enctype="multipart/form-data" class="form-horizontal" action="" >
+						{% csrf_token %}
+						<h1 class="text-center border-bottom m-b-30 p-10" >Documentos</h1>
+						{% if pase_de_ingreso.criterio_aprobacion.alias == 'A2' %}
+							<div class="row m-l-20">
+								<div class="col-sm-4">
+									<div class="form-group is-empty m-t-0">
+										<label>Boleta de pago</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="boleta_pago" placeholder="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir Boleta de pago">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty m-t-0">
+										<label>PDT</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="pdt" placeholder="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir PDT">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty m-t-0">
+										<label>Registro de informacion laboral</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="registro_laboral" placeholder="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir registro">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% elif pase_de_ingreso.criterio_aprobacion.alias == 'A3' %}
+							<div class="row m-l-20">
+								<div class="col-sm-offset-2 col-sm-4">
+									<div class="form-group is-empty m-t-0">
+										<label>Carnet de extranjería</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="carnet_extranjeria" ="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir carnet de extranjeria">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="form-group is-empty m-t-0">
+										<label>Trámite migratorio</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="tramite_migratorio" placeholder="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir Tramite migratorio">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% elif pase_de_ingreso.criterio_aprobacion.alias == 'A3' %}
+							<div class="row m-l-20">
+								<div class="col-sm-4 col-sm-offset-4">
+									<div class="form-group is-empty m-t-0">
+										<label>Orden de servicios</label>
+										<div class="input-group">
+											<input type="file" class="form-control" name="orden_servicio" ="File Upload..." >
+											<div class="input-group">
+												<input type="text" readonly="" class="form-control" placeholder="Subir orden de servicios">
+												<span class="input-group-btn input-group-sm">
+													<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+														<i class="zmdi zmdi-attachment-alt"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+						{% if message.value %}
+							<div class="alert alert-{{message.class}} text-center" role="alert">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								{{message.value}}
+							</div>
+						{% endif %}
+						<div class="row">
+							<div class="form-group text-center col-sm-12">
+								<button type="submit" class="btn btn-info btn-round">continuar</button>
+								<a class="btn btn-round btn-danger" href="/convocatorias/puestos/{{pase_de_ingreso.convocatoria_puesto.uuid}}/pases_ingreso/{{pase_de_ingreso.criterio_aprobacion.uuid}}">cancelar</a>
+							</div>
+						</div>
+					</form>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

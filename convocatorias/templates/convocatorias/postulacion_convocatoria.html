@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content-header %}{% endblock %}
+{% block content-body %}
+	{% include "messages.html" %}
+	{% if convocatoria_puesto %}
+		<div class="row">
+			{% include "convocatorias/title_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+			{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+		</div>
+		<div class="row">
+			{% include 'convocatorias/title_convocatoria_puesto.html' %}
+			{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+		</div>
+		<div class="row">
+			<div class="col-sm-9">
+				<form action="" method="GET" class="form-horizontal" >
+					<div class="form-group is-empty m-t-5">
+						<label for="numero_documento" class="col-sm-2 control-label">Buscar</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" id="numero_documento" name="numero_documento" placeholder="Ingresar número de documento">
+						</div>
+						<div class="col-sm-4">
+							<button type="submit" class="btn btn-info btn-round m-t-0">buscar</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-sm-3">
+				<a href="/personas/add/?convocatoria_puesto={{convocatoria_puesto.uuid}}" target="_blank" class="btn btn-success btn-flat" ><i class="zmdi zmdi-plus-circle"></i> Agregar persona</a>
+			</div>
+		</div>	
+		<div class="row bg-white">
+			<div class="tabpanel">
+				<ul class="nav nav-tabs">
+					<li class="active" role="presentation"><a href="#tab-1" data-toggle="tab" aria-expanded="true">Busqueda</a></li>
+					<li role="presentation"><a href="#tab-2" data-toggle="tab" aria-expanded="true">({{postulantes|length}}) Postulantes</a></li>
+				</ul>
+			</div>
+			<div class="tab-content p-20">
+				<div class="tab-pane fadeIn active" id="tab-1">
+					<div class="row">
+						<div class="row">
+							<div class="panel-group" id="accordion-busqueda" role="tablist" >
+								{% for postulante in registrados %}
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="heading{{postulante.persona.uuid}}">
+											<h4 class="panel-title">
+												<!-- {% if not forloop.first %} class="collapsed" {% endif %} -->
+												<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion-busqueda" href="#collapse-busqueda{{postulante.persona.uuid}}" aria-expanded="true" aria-controls="collapse-busqueda{{postulante.persona.uuid}}">{{postulante.persona.nombres|upper}} {{postulante.persona.apellidos|upper}} </a>
+											</h4>
+										</div>
+										<!-- class => {% if forloop.first %} in {% endif %} -->
+										<div id="collapse-busqueda{{postulante.persona.uuid}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{postulante.persona.uuid}}">
+											<div class="panel-body">
+												<div class="row">
+													<ul class="list-group col-sm-6">
+														<li class="list-group-item ">
+															<span class="pull-left"><img style="height:40px;" src="{% if postulante.persona.imagen %} {{postulante.persona.imagen.url}} {% else %} https://s3.amazonaws.com/limagas/dashboard/user.jpg {% endif %}" alt="" class="img-circle max-w-40 m-r-10 "> </span>
+															<div class="list-group-item-body">
+																<div class="list-group-item-heading">{{postulante.persona.get_genero_display}}</div>
+																<div class="list-group-item-text">{{postulante.persona.get_estado_civil_display}}</div>
+															</div>
+														</li>
+													</ul>
+													<div class="col-sm-6">
+														{% if postulante.postulado %}
+															<!-- <button class="btn btn-danger btn-round excluir_postulante" data-postulante="{{postulante.persona.uuid}}" data-convocatoria="{{convocatoria_puesto.uuid}}" >excluir convocatoria</button> -->
+															<h3 class="text-uppercase text-green" ><strong><i class="zmdi zmdi-check" ></i>postulado</strong></h3>
+														{% else %}
+															{% if postulante.persona.verificado %}
+																<button class="btn btn-info btn-round postular_convocatoria" data-postulante="{{postulante.persona.uuid}}" data-convocatoria="{{convocatoria_puesto.uuid}}" >postular</button>
+															{% else %}
+																<h3 class="text-danger text-uppercase"><strong><i class="zmdi zmdi-block"></i> bloqueado por no verificado</strong></h3>
+															{% endif %}
+														{% endif %}
+													</div>
+												</div>
+												{% include "personas/informacion_persona.html" with persona=postulante.persona %}
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fadeIn" id="tab-2">
+					<div class="row">
+						<div class="panel-group" id="popout" role="tablist" aria-multiselectable="true">
+							{% for postulando in postulantes %}
+								<div class="panel panel-default">
+									<div class="panel-heading" role="tab" id="heading{{postulando.postulacion.persona.uuid}}">
+										<h4 class="panel-title">
+											<!-- {% if not forloop.first %} class="collapsed" {% endif %} -->
+											<a class="collapsed" role="button" data-toggle="collapse" data-parent="#popout" href="#popout{{postulando.postulacion.persona.uuid}}" aria-expanded="true" aria-controls="popout{{postulando.postulacion.persona.uuid}}"><label>Nombres:</label> {{postulando.postulacion.persona.nombres}} {{postulando.postulacion.persona.apellidos}} <label>Fecha de Postulación:</label> {{postulando.postulacion.fecha_creacion|date:'d'}} de {{postulando.postulacion.fecha_creacion|date:'F Y'}}</a>
+										</h4>
+									</div>
+									<!-- {% if forloop.first %} in {% endif %} -->
+									<div id="popout{{postulando.postulacion.persona.uuid}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="popout{{postulando.postulacion.persona.uuid}}">
+										<div class="panel-body">
+											<div class="row">
+												<ul class="list-group col-sm-6">
+													<li class="list-group-item ">
+														<span class="pull-left"><img style="height:40px;" src="{% if persona.imagen %} {{persona.imagen.url}} {% else %} https://s3.amazonaws.com/limagas/dashboard/user.jpg {% endif %}" alt="" class="img-circle max-w-40 m-r-10 "> </span>
+														<div class="list-group-item-body">
+															<div class="list-group-item-heading">{{postulando.postulacion.persona.get_genero_display}}</div>
+															<div class="list-group-item-text">{{postulando.postulacion.persona.get_estado_civil_display}}</div>
+														</div>
+													</li>
+												</ul>
+												<div class="col-sm-6">
+													<button class="btn btn-danger btn-round delete_postulacion" data-postulante="{{postulando.postulacion.persona.uuid}}" data-convocatoria="{{postulando.postulacion.convocatoria_puesto.uuid}}" >excluir de convocatoria</button>
+												</div>
+											</div>
+											{% include "personas/informacion_persona.html" with persona=postulando.postulacion.persona %}
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}
+

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row bg-white m-b-10">
+		{% include 'personas/title_persona.html' %}
+	</div>
+	<div class="row">
+		<div class="card">
+			<div class="card-body">
+				{% if messages %}
+					{% for message in messages %}
+						<div class="alert alert-{{message.tags}}" role="alert">
+							{{message}}
+						</div>
+					{% endfor %}
+				{% endif %}
+				<form id="form-documentos-persona" method="POST" class="form-horizontal" enctype="multipart/form-data" action="" >
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-sm-3">
+							<div class="form-group is-empty">
+								<div class="col-sm-12"><label class="control-label">{{form.tipo.label}}</label></div>
+								<div class="col-sm-12">
+									{{form.tipo}}
+									<span class="text-red" >{{form.tipo.errors}}</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+							<div class="form-group is-empty">
+								<div class="col-sm-12 col-sm-offset-2"><label class="control-label">Documento</label></div>
+								<div class="input-group col-sm-offset-2">
+									{{form.documento}}
+									<div class="input-group">
+										<input type="text" readonly="" required="required" class="form-control" placeholder="Subir Documento">
+										<span class="input-group-btn input-group-sm">
+											<button type="button" class="btn btn-info btn-fab btn-fab-sm">
+											<i class="zmdi zmdi-face"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-info btn-round">guardar</button>
+							{% if form.instance.id %}
+								<a class="btn btn-round btn-danger" href="/personas/{{persona.uuid}}/documentos/add/" >cancelar</a>
+							{% endif %}
+						</div>
+					</div>
+				</form>
+				<div class="card-body p-0 border-top">
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Tipo</th>
+									<th>Documento</th>
+									<th>Opción</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for documento in persona.documentospersonal_set.all|dictsortreversed:'tipo.descripcion' %}
+									<tr>
+										<th scope="row">{{forloop.counter}}</th>
+										<td>{{documento.tipo.descripcion}}</td>
+										<td><a href="{{documento.documento.url}}" target="_blank" class="btn btn-flat btn-warning p-0" ><i class="zmdi zmdi-eye" ></i> ver</a></td>
+										<td>
+											<a href="/personas/{{persona.uuid}}/documentos/edit/{{documento.pk}}/" class="btn btn-success btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="editar" ><i class="zmdi zmdi-edit"></i></span>
+											</a>
+											<a href="/personas/{{persona.uuid}}/documentos/delete/{{documento.pk}}/" class="btn btn-danger btn-sm btn-round" >
+												<span data-toggle="tooltip" data-placement="top" title="eliminar" ><i class="zmdi zmdi-delete"></i></span>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base_publico.html' %}
+{% load static %}
+{% block content %}
+	<section id="team">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h3>Convocatorias</h3>
+				</div>
+				{% for estado in convocatorias %}
+					{% for puesto in estado.convocatoria.convocatoriapuesto_set.all %}
+						<div class="col-sm-4">
+							<div class="card">
+								<a href="/publico/convocatoria/puesto/{{puesto.uuid}}/">
+									<img class="card-img-top" src="http://orc.com.pe/wp-content/uploads/2015/07/banner2-400x260.jpg" alt="Card image cap">
+								</a>
+								<div class="card-body">
+									<a href="/publico/convocatoria/puesto/{{puesto.uuid}}/" class="btn-link" >
+										<h4>({{puesto.cantidad_vacantes}}) {{puesto.rango.descripcion}} {{puesto.especialidad.descripcion}}</h4>
+									</a>
+									<p class="card-text" >{% if estado.fecha_inicio %} {{estado.fecha_inicio|date:'d'}} de {{estado.fecha_inicio|date:'F Y'}} {% endif %} {% if estado.fecha_fin %} <strong>al</strong> {{estado.fecha_fin|date:'d'}} de {{estado.fecha_fin|date:'F Y'}} {% endif %}</p>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endblock content %}

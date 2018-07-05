@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content-header %}
+	{% include 'content-header-template.html' %}
+{% endblock %}
+{% block content-body %}
+	<div class="row">
+		{% include "convocatorias/title_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+		{% include "convocatorias/collapse/informacion_convocatoria.html" with convocatoria=convocatoria_puesto.convocatoria %}
+	</div>
+	<div class="row">
+		{% include 'convocatorias/title_convocatoria_puesto.html' %}
+		{% include "convocatorias/collapse/informacion_convocatoria_puesto.html" with convocatoria_puesto=convocatoria_puesto %}
+	</div>
+	<div class="row">
+		<!-- modal-dialog detail -->
+		<div class="modal fade in" id="modal__view_detail" tabindex="-1" role="dialog" aria-labelledby="modal__view_detail">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel-2">Informacion</h4>
+						<ul class="card-actions icons right-top">
+							<li>
+								<a href="javascript:void(0)" data-dismiss="modal" class="text-white" aria-label="Close">
+									<i class="zmdi zmdi-close"></i>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div id="modal-body" class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">ok</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- modal-dialog detail -->
+	</div>
+	<div class="row">
+		<div class="card">
+			<!-- <header class="card-heading">
+				<h2 class="card-title">Tabs No Card</h2>
+			</header> -->
+			<div class="card-body p-0">
+				<div class="tabpanel">
+					<ul class="nav nav-tabs">
+						<li class="active" role="presentation"><a href="#tab-1" data-toggle="tab" aria-expanded="true">Postulantes</a></li>
+						<li role="presentation"><a href="#tab-2" data-toggle="tab" aria-expanded="true">Preseleccionados</a></li>
+						<li role="presentation"><a href="#tab-3" data-toggle="tab" aria-expanded="true">Seleccionados</a></li>
+						<li role="presentation"><a href="#tab-4" data-toggle="tab" aria-expanded="true">Aprobados</a></li>
+					</ul>
+				</div>
+				<div class="tab-content p-20">
+					<div class="tab-pane fadeIn active" id="tab-1">
+						{% include "personas/table_informacion_persona.html" with registros=postulantes %}
+					</div>
+					<div class="tab-pane fadeIn" id="tab-2">
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/pdf/preseleccionados/" class="btn btn-round btn-warning" >preseleccionados en pdf</a>
+							</div>
+						</div>
+						{% include "personas/table_informacion_persona.html" with registros=preseleccionados %}
+					</div>
+					<div class="tab-pane fadeIn" id="tab-3">
+						<div class="row">
+							<div class="col-sm-12">
+								<a href="/convocatorias/puestos/{{convocatoria_puesto.uuid}}/pdf/seleccionados/" class="btn btn-round btn-warning" >seleccionados en pdf</a>
+							</div>
+						</div>
+						{% include "personas/table_informacion_persona.html" with registros=aprobados %}
+					</div>
+					<div class="tab-pane fadeIn" id="tab-4">
+						{% include "personas/table_informacion_persona.html" with registros=contratados %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

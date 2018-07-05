@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<title>Iniciar sesión</title>
+	<link rel="stylesheet" href="{% static 'assets/css/vendor.bundle.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/app.bundle.css' %}">
+	<link rel="stylesheet" href="{% static 'assets/css/theme-a.css' %}">
+</head>
+<body id="auth_wrapper" >
+	<div id="login_wrapper">
+		<div id="login_content">
+			<div class="logo">
+				<img src="https://s3.amazonaws.com/reclutamiento/images/logopetroperu-bg-FFF.jpg" alt="logo" class="logo-img">
+			</div>
+			<h1 class="login-title">Ingresa con una cuenta</h1>
+			<div class="login-body">
+				{% if message.message %}
+					<div class="alert alert-{{message.class}}" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						{{message.message}}
+					</div>
+				{% endif %}
+				<form method="POST" action="" >
+					{% csrf_token %}
+					<div class="form-group label-floating is-empty">
+						<label class="control-label">Username</label>
+						<input type="text" name="username" class="form-control" required="">
+					</div>
+					<div class="form-group label-floating is-empty">
+						<label class="control-label">Contraseña</label>
+						<input type="password" name="password" class="form-control" required="">
+					</div>
+					<!-- <a href="javascript:void(0)" class="forgot-pass pull-right">Olvidaste la contraseña?</a>
+					<div class="checkbox inline-block">
+						<label>
+							<input type="checkbox" class="checkbox-inline" value="">Recordar
+						</label>
+					</div> -->
+					<button type="submit" class="btn btn-info btn-block m-t-40">Ingresar</button>
+				</form>	
+			</div>
+		</div>
+	</div>
+	<script src="{% static 'assets/js/vendor.bundle.js' %}"></script>
+	<script src="{% static 'assets/js/app.bundle.js' %}"></script>
+</body>
+</html>
