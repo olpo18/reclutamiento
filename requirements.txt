@@ -9,7 +9,7 @@ chardet==3.0.4
 dj-database-url==0.4.2
 Django==1.11.9
 django-autocomplete-light==3.2.10
-django-celery-results==1.0.1
+django-celery-results==2.4.0
 django-recaptcha2==1.0.3
 django-storages==1.6.5
 djangorestframework==3.7.7
